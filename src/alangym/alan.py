@@ -142,10 +142,20 @@ class AlanRunner:
         node_modules = _alan_node_modules(resolved_executable)
         if node_modules is not None:
             child_environment["NODE_PATH"] = str(node_modules)
-        if tool_path is not None:
-            child_environment["PATH"] = os.pathsep.join(
-                (str(tool_path), child_environment.get("PATH", ""))
+        executable_paths = []
+        if node_modules is not None:
+            executable_paths.extend(
+                str(path)
+                for path in (node_modules / ".bin", node_modules / "opencode-ai" / "bin")
+                if path.is_dir()
             )
+        if tool_path is not None:
+            executable_paths.append(str(tool_path))
+        if executable_paths:
+            inherited_path = child_environment.get("PATH", "")
+            if inherited_path:
+                executable_paths.append(inherited_path)
+            child_environment["PATH"] = os.pathsep.join(executable_paths)
         child_environment.update(
             {
                 "ALAN_HARNESS_AUTO_ALLOW_EDITS": "1",

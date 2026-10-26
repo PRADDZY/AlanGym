@@ -1,4 +1,5 @@
 import asyncio
+import os
 from types import SimpleNamespace
 
 import pytest
@@ -8,6 +9,10 @@ from alangym.alan import AlanRunner, RunStatus
 
 def test_runner_pins_model_and_drops_inherited_secrets(monkeypatch, tmp_path):
     invocation = {}
+    node_modules = tmp_path / "alan-node-modules"
+    executable_paths = (node_modules / ".bin", node_modules / "opencode-ai" / "bin")
+    for path in executable_paths:
+        path.mkdir(parents=True)
 
     async def start_process(*args, **kwargs):
         invocation["args"] = args
@@ -18,6 +23,7 @@ def test_runner_pins_model_and_drops_inherited_secrets(monkeypatch, tmp_path):
         )
 
     monkeypatch.setattr("alangym.alan.shutil.which", lambda _: "alan")
+    monkeypatch.setattr("alangym.alan._alan_node_modules", lambda _: node_modules)
     monkeypatch.setattr("alangym.alan.asyncio.create_subprocess_exec", start_process)
     monkeypatch.setenv("GH_TOKEN", "must-not-reach-the-agent")
 
@@ -36,6 +42,9 @@ def test_runner_pins_model_and_drops_inherited_secrets(monkeypatch, tmp_path):
     assert invocation["kwargs"]["cwd"] == str(tmp_path)
     assert invocation["kwargs"]["env"]["ALAN_HARNESS_AUTO_ALLOW_EDITS"] == "1"
     assert "GH_TOKEN" not in invocation["kwargs"]["env"]
+    child_path = invocation["kwargs"]["env"]["PATH"].split(os.pathsep)
+    assert child_path[:2] == [str(path) for path in executable_paths]
+    assert invocation["kwargs"]["env"]["NODE_PATH"] == str(node_modules)
 
 
 def test_runner_reports_missing_alan_login(monkeypatch, tmp_path):
