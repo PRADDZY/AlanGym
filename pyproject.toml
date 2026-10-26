@@ -14,9 +14,17 @@ dev = ["pytest==9.1.1", "httpx==0.28.1"]
 [project.scripts]
 alangym = "alangym.cli:main"
 
+[build-system]
+requires = ["hatchling==1.32.4"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/alangym"]
+
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 addopts = "-q"
+pythonpath = ["src"]
 
 [tool.ruff]
 line-length = 100
