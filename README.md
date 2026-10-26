@@ -153,6 +153,7 @@ start/cancel controls are local.
 ## Development checks
 
 ```powershell
+New-Item -ItemType Directory -Force .alangym | Out-Null
 uv run pytest --basetemp .alangym/pytest
 cd web
 npm run build
