@@ -36,6 +36,32 @@ SAFE_ENVIRONMENT_VARIABLES: Final = (
 )
 
 
+def _alan_node_modules(executable: str) -> Path | None:
+    """Find the installed Alan package's dependencies for Bun module resolution."""
+    executable_path = Path(executable)
+    try:
+        resolved_path = executable_path.resolve()
+    except OSError:
+        resolved_path = executable_path
+
+    roots = [executable_path.parent, resolved_path.parent, *resolved_path.parents]
+    checked: set[Path] = set()
+    for root in roots:
+        candidates = (
+            root / "node_modules" / "alan-code" / "node_modules",
+            root / "alan-code" / "node_modules",
+            root / "node_modules",
+        )
+        for candidate in candidates:
+            normalized = candidate.resolve()
+            if normalized in checked:
+                continue
+            checked.add(normalized)
+            if (normalized / "opencode-ai" / "package.json").is_file():
+                return normalized
+    return None
+
+
 class RunStatus(StrEnum):
     COMPLETED = "completed"
     TIMED_OUT = "timed_out"
@@ -99,6 +125,9 @@ class AlanRunner:
         child_environment = {
             key: value for key, value in os.environ.items() if key.upper() in SAFE_ENVIRONMENT_VARIABLES
         }
+        node_modules = _alan_node_modules(resolved_executable)
+        if node_modules is not None:
+            child_environment["NODE_PATH"] = str(node_modules)
         if tool_path is not None:
             child_environment["PATH"] = os.pathsep.join(
                 (str(tool_path), child_environment.get("PATH", ""))
@@ -206,5 +235,14 @@ class AlanRunner:
         ):
             return RunStatus.AUTH_REQUIRED
         if returncode == 0:
+            return RunStatus.COMPLETED
+        if (
+            stdout.strip()
+            and "AbortError: The operation was aborted." in stderr
+            and "runPrintSession" in stderr
+        ):
+            # Alan's print-mode engine can emit a complete response, then fail
+            # while aborting its stream during shutdown. The workspace grader
+            # remains the authority on whether the response accomplished work.
             return RunStatus.COMPLETED
         return RunStatus.FAILED
