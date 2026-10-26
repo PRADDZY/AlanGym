@@ -120,7 +120,7 @@ class ExperimentManager:
                 repository_path, run_id, run_dir, repo_slug=run["repo"]
             )
             self._transition(run_id, "validating", "Checking each task fails before and passes after its PR")
-            verified = await self._validate_candidates(
+            verified, validation_failures = await self._validate_candidates(
                 run_id, candidates, repository_path, python, run_dir / "validation"
             )
             training, heldout = split_tasks(verified, train_count=TRAINING_COUNT, seed=run["seed"])
@@ -164,6 +164,7 @@ class ExperimentManager:
             self._transition(run_id, "baseline", "Running the baseline skill on all 10 tasks")
             baseline = await self._evaluate(
                 run_id, repository_path, python, run_dir, verified, current_skill, current_version,
+                validation_failures=validation_failures,
                 phase="baseline", trial_prefix="baseline",
             )
             if baseline is None:
@@ -187,6 +188,7 @@ class ExperimentManager:
                     )
                 current_training = await self._evaluate(
                     run_id, repository_path, python, run_dir, training, current_skill, current_version,
+                    validation_failures=validation_failures,
                     phase=f"round_{round_number}_current", trial_prefix=f"r{round_number}-current",
                     round_number=round_number,
                 )
@@ -229,7 +231,8 @@ class ExperimentManager:
                     continue
                 candidate_training = await self._evaluate(
                     run_id, repository_path, python, run_dir, training, candidate_skill,
-                    candidate_version, phase=f"round_{round_number}_candidate",
+                    candidate_version, validation_failures=validation_failures,
+                    phase=f"round_{round_number}_candidate",
                     trial_prefix=f"r{round_number}-candidate", round_number=round_number,
                 )
                 if candidate_training is None:
@@ -268,6 +271,7 @@ class ExperimentManager:
             self._transition(run_id, "evaluating", "Measuring the selected skill on held-out tasks")
             final = await self._evaluate(
                 run_id, repository_path, python, run_dir, heldout, current_skill, current_version,
+                validation_failures=validation_failures,
                 phase="final", trial_prefix="final",
             )
             if final is None:
@@ -379,9 +383,10 @@ class ExperimentManager:
         repository_path: Path,
         python: Path,
         validation_root: Path,
-    ) -> list[PullRequestCandidate]:
+    ) -> tuple[list[PullRequestCandidate], dict[int, str]]:
         remaining = list(candidates)
         validated: set[int] = set()
+        validation_failures: dict[int, str] = {}
         while True:
             selection = select_candidates(remaining, count=TASK_COUNT)
             failed_candidate = False
@@ -416,9 +421,10 @@ class ExperimentManager:
                         "after_passed": validation.after.passed_count,
                     },
                 )
+                validation_failures[candidate.number] = validation.before.output
                 validated.add(candidate.number)
             if not failed_candidate:
-                return selection
+                return selection, validation_failures
 
     async def _evaluate(
         self,
@@ -430,6 +436,7 @@ class ExperimentManager:
         skill: str,
         skill_version: str,
         *,
+        validation_failures: dict[int, str],
         phase: str,
         trial_prefix: str,
         round_number: int | None = None,
@@ -450,7 +457,10 @@ class ExperimentManager:
             skill_path.parent.mkdir(parents=True, exist_ok=True)
             skill_path.write_text(skill, encoding="utf-8")
             agent = await self.runner.run(
-                _task_instruction(candidate, python, skill), workspace,
+                _task_instruction(
+                    candidate, python, skill, validation_failures.get(candidate.number, "")
+                ),
+                workspace,
                 timeout=EFFECTIVE_TIMEOUT, tool_path=python.parent,
             )
             if agent.status is RunStatus.AUTH_REQUIRED:
@@ -801,10 +811,13 @@ async def _run_process(command: list[str], cwd: Path, *, timeout: float) -> tupl
     return process.returncode or 0, output_bytes.decode("utf-8", errors="replace")
 
 
-def _task_instruction(candidate: PullRequestCandidate, python: Path, skill: str) -> str:
+def _task_instruction(
+    candidate: PullRequestCandidate, python: Path, skill: str, validation_failure: str
+) -> str:
     tests = " ".join(candidate.test_paths)
     allowed = "\n".join(f"- {path}" for path in sorted(candidate.source_paths))
     description = candidate.body.strip()[:3_000] or "No description was provided."
+    failure = validation_failure[-4_000:].strip() or "No failure output was available."
     return (
         f"Fix this regression in the repository using only these source files:\n{allowed}\n\n"
         f"Task from merged PR #{candidate.number}: {candidate.title}\n\n{description}\n\n"
@@ -812,7 +825,8 @@ def _task_instruction(candidate: PullRequestCandidate, python: Path, skill: str)
         "Follow this Alan skill:\n" + skill +
         f"\n\nHarness rule: the harness will run {python.name} -m pytest -q {tests} after you finish. "
         "You may read tests, but do not run tests or edit tests, project files, or other repository files. "
-        "This rule overrides any conflicting test instruction in the skill."
+        "This rule overrides any conflicting test instruction in the skill.\n\n"
+        "Pre-fix test failure output:\n" + failure
     )
 
 
