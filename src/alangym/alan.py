@@ -146,7 +146,7 @@ class AlanRunner:
         if node_modules is not None:
             executable_paths.extend(
                 str(path)
-                for path in (node_modules / ".bin", node_modules / "opencode-ai" / "bin")
+                for path in (node_modules / "opencode-ai" / "bin", node_modules / ".bin")
                 if path.is_dir()
             )
         if tool_path is not None:

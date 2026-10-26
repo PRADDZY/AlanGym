@@ -10,7 +10,7 @@ from alangym.alan import AlanRunner, RunStatus
 def test_runner_pins_model_and_drops_inherited_secrets(monkeypatch, tmp_path):
     invocation = {}
     node_modules = tmp_path / "alan-node-modules"
-    executable_paths = (node_modules / ".bin", node_modules / "opencode-ai" / "bin")
+    executable_paths = (node_modules / "opencode-ai" / "bin", node_modules / ".bin")
     for path in executable_paths:
         path.mkdir(parents=True)
 
