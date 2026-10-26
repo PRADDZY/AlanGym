@@ -124,6 +124,19 @@ class ExperimentManager:
                 run_id, candidates, repository_path, python, run_dir / "validation"
             )
             training, heldout = split_tasks(verified, train_count=TRAINING_COUNT, seed=run["seed"])
+
+            # Keep seeded membership while running shorter tasks first for faster feedback.
+            def task_priority(task: PullRequestCandidate) -> tuple[int, int, int, int]:
+                return (
+                    len(task.body.strip()),
+                    len(task.source_paths),
+                    len(task.test_paths),
+                    task.number,
+                )
+
+            verified = sorted(verified, key=task_priority)
+            training = sorted(training, key=task_priority)
+            heldout = sorted(heldout, key=task_priority)
             train_numbers = {candidate.number for candidate in training}
             task_rows = [
                 self._task_record(candidate, "train" if candidate.number in train_numbers else "heldout")
