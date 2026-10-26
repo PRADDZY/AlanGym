@@ -1,0 +1,23 @@
+[project]
+name = "alangym"
+version = "0.1.0"
+description = "Measure and evolve coding-agent skills against real regression tasks"
+requires-python = ">=3.13"
+dependencies = [
+    "fastapi==0.162.0",
+    "uvicorn==0.54.0",
+]
+
+[project.optional-dependencies]
+dev = ["pytest==9.1.1", "httpx==0.28.1"]
+
+[project.scripts]
+alangym = "alangym.cli:main"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+
+[tool.ruff]
+line-length = 100
+target-version = "py313"
