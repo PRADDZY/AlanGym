@@ -1,0 +1,2294 @@
+{
+  "events": [
+    {
+      "created_at": "2026-10-26T20:40:37+00:00",
+      "message": "Run created",
+      "payload": {},
+      "sequence": 395,
+      "type": "created"
+    },
+    {
+      "created_at": "2026-10-26T20:40:37+00:00",
+      "message": "Checking the public GitHub repository and merged PRs",
+      "payload": {},
+      "sequence": 396,
+      "type": "mining"
+    },
+    {
+      "created_at": "2026-10-26T20:41:18+00:00",
+      "message": "Found 31 small PRs with source and test changes",
+      "payload": {
+        "count": 31
+      },
+      "sequence": 397,
+      "type": "candidate_count"
+    },
+    {
+      "created_at": "2026-10-26T20:41:18+00:00",
+      "message": "Installing the repository's locked pytest environment",
+      "payload": {},
+      "sequence": 398,
+      "type": "environment"
+    },
+    {
+      "created_at": "2026-10-26T20:41:18+00:00",
+      "message": "Locked pytest environment is ready",
+      "payload": {
+        "python_version": "3.13.6",
+        "uv": "uv 0.12.15 (d35f1f270 2026-09-15 x86_64-pc-windows-msvc)",
+        "uv_lock_sha256": "f7643e4fefb42265a9d4379177f665b4bb018b802bcaeadeb8b67e2e2878b00c"
+      },
+      "sequence": 399,
+      "type": "environment_ready"
+    },
+    {
+      "created_at": "2026-10-26T20:41:18+00:00",
+      "message": "Checking each task fails before and passes after its PR",
+      "payload": {},
+      "sequence": 400,
+      "type": "validating"
+    },
+    {
+      "created_at": "2026-10-26T20:41:18+00:00",
+      "message": "Validating PR #513: Fix spooled stream write compatibility and backwards text seeks",
+      "payload": {
+        "pr_number": 513
+      },
+      "sequence": 401,
+      "type": "validating_task"
+    },
+    {
+      "created_at": "2026-10-26T20:41:29+00:00",
+      "message": "PR #513 fails before and passes after its fix",
+      "payload": {
+        "after_passed": 88,
+        "before_failed": 6,
+        "pr_number": 513
+      },
+      "sequence": 402,
+      "type": "task_validated"
+    },
+    {
+      "created_at": "2026-10-26T20:41:29+00:00",
+      "message": "Validating PR #455: Pass encoding through to unquote in parse_qsl",
+      "payload": {
+        "pr_number": 455
+      },
+      "sequence": 403,
+      "type": "validating_task"
+    },
+    {
+      "created_at": "2026-10-26T20:41:43+00:00",
+      "message": "PR #455 fails before and passes after its fix",
+      "payload": {
+        "after_passed": 126,
+        "before_failed": 1,
+        "pr_number": 455
+      },
+      "sequence": 404,
+      "type": "task_validated"
+    },
+    {
+      "created_at": "2026-10-26T20:41:43+00:00",
+      "message": "Validating PR #454: Use the sep argument in args2sh and args2cmd",
+      "payload": {
+        "pr_number": 454
+      },
+      "sequence": 405,
+      "type": "validating_task"
+    },
+    {
+      "created_at": "2026-10-26T20:41:53+00:00",
+      "message": "PR #454 fails before and passes after its fix",
+      "payload": {
+        "after_passed": 23,
+        "before_failed": 2,
+        "pr_number": 454
+      },
+      "sequence": 406,
+      "type": "task_validated"
+    },
+    {
+      "created_at": "2026-10-26T20:41:53+00:00",
+      "message": "Validating PR #446: setutils: cover __ge__'s double-complement branch, drop duplicated NotImplemented checks",
+      "payload": {
+        "pr_number": 446
+      },
+      "sequence": 407,
+      "type": "validating_task"
+    },
+    {
+      "created_at": "2026-10-26T20:42:08+00:00",
+      "message": "Skipped PR #446: its changed tests are not a clean regression",
+      "payload": {
+        "pr_number": 446
+      },
+      "sequence": 408,
+      "type": "task_rejected"
+    },
+    {
+      "created_at": "2026-10-26T20:42:08+00:00",
+      "message": "Validating PR #437: Fix off-by-one in Bits length check",
+      "payload": {
+        "pr_number": 437
+      },
+      "sequence": 409,
+      "type": "validating_task"
+    },
+    {
+      "created_at": "2026-10-26T20:42:50+00:00",
+      "message": "PR #437 fails before and passes after its fix",
+      "payload": {
+        "after_passed": 12,
+        "before_failed": 1,
+        "pr_number": 437
+      },
+      "sequence": 410,
+      "type": "task_validated"
+    },
+    {
+      "created_at": "2026-10-26T20:42:50+00:00",
+      "message": "Validating PR #428: Fix ZeroDivisionError in backoff/backoff_iter with factor=1.0 and no count",
+      "payload": {
+        "pr_number": 428
+      },
+      "sequence": 411,
+      "type": "validating_task"
+    },
+    {
+      "created_at": "2026-10-26T20:43:23+00:00",
+      "message": "PR #428 fails before and passes after its fix",
+      "payload": {
+        "after_passed": 45,
+        "before_failed": 1,
+        "pr_number": 428
+      },
+      "sequence": 412,
+      "type": "task_validated"
+    },
+    {
+      "created_at": "2026-10-26T20:43:23+00:00",
+      "message": "Validating PR #407: Match list insert before start in BarrelList",
+      "payload": {
+        "pr_number": 407
+      },
+      "sequence": 413,
+      "type": "validating_task"
+    },
+    {
+      "created_at": "2026-10-26T20:43:33+00:00",
+      "message": "PR #407 fails before and passes after its fix",
+      "payload": {
+        "after_passed": 4,
+        "before_failed": 1,
+        "pr_number": 407
+      },
+      "sequence": 414,
+      "type": "task_validated"
+    },
+    {
+      "created_at": "2026-10-26T20:43:33+00:00",
+      "message": "Validating PR #341: Support `ior` for `dictutils.OMD`",
+      "payload": {
+        "pr_number": 341
+      },
+      "sequence": 415,
+      "type": "validating_task"
+    },
+    {
+      "created_at": "2026-10-26T20:43:40+00:00",
+      "message": "PR #341 fails before and passes after its fix",
+      "payload": {
+        "after_passed": 27,
+        "before_failed": 1,
+        "pr_number": 341
+      },
+      "sequence": 416,
+      "type": "task_validated"
+    },
+    {
+      "created_at": "2026-10-26T20:43:40+00:00",
+      "message": "Validating PR #332: Update tbutils.py to parse tracebacks with anchor lines",
+      "payload": {
+        "pr_number": 332
+      },
+      "sequence": 417,
+      "type": "validating_task"
+    },
+    {
+      "created_at": "2026-10-26T20:43:54+00:00",
+      "message": "PR #332 fails before and passes after its fix",
+      "payload": {
+        "after_passed": 3,
+        "before_failed": 1,
+        "pr_number": 332
+      },
+      "sequence": 418,
+      "type": "task_validated"
+    },
+    {
+      "created_at": "2026-10-26T20:43:54+00:00",
+      "message": "Validating PR #278: Adds noop function satisfying PEP 559",
+      "payload": {
+        "pr_number": 278
+      },
+      "sequence": 419,
+      "type": "validating_task"
+    },
+    {
+      "created_at": "2026-10-26T20:44:25+00:00",
+      "message": "PR #278 fails before and passes after its fix",
+      "payload": {
+        "after_passed": 5,
+        "before_failed": 1,
+        "pr_number": 278
+      },
+      "sequence": 420,
+      "type": "task_validated"
+    },
+    {
+      "created_at": "2026-10-26T20:44:25+00:00",
+      "message": "Validating PR #247: Fix NetstringSocket to correctly use arguments to .read_ns() method.",
+      "payload": {
+        "pr_number": 247
+      },
+      "sequence": 421,
+      "type": "validating_task"
+    },
+    {
+      "created_at": "2026-10-26T20:45:07+00:00",
+      "message": "PR #247 fails before and passes after its fix",
+      "payload": {
+        "after_passed": 11,
+        "before_failed": 1,
+        "pr_number": 247
+      },
+      "sequence": 422,
+      "type": "task_validated"
+    },
+    {
+      "created_at": "2026-10-26T20:45:07+00:00",
+      "message": "Validated 10 PRs and froze the 6/4 task split",
+      "payload": {
+        "heldout": [
+          247,
+          455,
+          428,
+          513
+        ],
+        "seed": 42,
+        "training": [
+          341,
+          332,
+          407,
+          278,
+          454,
+          437
+        ]
+      },
+      "sequence": 423,
+      "type": "split_ready"
+    },
+    {
+      "created_at": "2026-10-26T20:45:07+00:00",
+      "message": "Running the baseline skill on all 10 tasks",
+      "payload": {},
+      "sequence": 424,
+      "type": "baseline"
+    },
+    {
+      "created_at": "2026-10-26T20:45:07+00:00",
+      "message": "baseline: PR #341 — Support `ior` for `dictutils.OMD`",
+      "payload": {
+        "phase": "baseline",
+        "pr_number": 341,
+        "trial_id": "baseline:pr-341"
+      },
+      "sequence": 425,
+      "type": "trial_started"
+    },
+    {
+      "created_at": "2026-10-26T20:50:00+00:00",
+      "message": "baseline: PR #341 did not pass",
+      "payload": {
+        "elapsed_seconds": 276.577,
+        "passed": false,
+        "phase": "baseline",
+        "pr_number": 341,
+        "status": "policy_violation",
+        "trial_id": "baseline:pr-341"
+      },
+      "sequence": 426,
+      "type": "trial_finished"
+    },
+    {
+      "created_at": "2026-10-26T20:50:00+00:00",
+      "message": "baseline: PR #247 — Fix NetstringSocket to correctly use arguments to .read_ns() method.",
+      "payload": {
+        "phase": "baseline",
+        "pr_number": 247,
+        "trial_id": "baseline:pr-247"
+      },
+      "sequence": 427,
+      "type": "trial_started"
+    },
+    {
+      "created_at": "2026-10-26T20:52:23+00:00",
+      "message": "baseline: PR #247 passed",
+      "payload": {
+        "elapsed_seconds": 137.705,
+        "passed": true,
+        "phase": "baseline",
+        "pr_number": 247,
+        "status": "passed",
+        "trial_id": "baseline:pr-247"
+      },
+      "sequence": 428,
+      "type": "trial_finished"
+    },
+    {
+      "created_at": "2026-10-26T20:52:23+00:00",
+      "message": "baseline: PR #332 — Update tbutils.py to parse tracebacks with anchor lines",
+      "payload": {
+        "phase": "baseline",
+        "pr_number": 332,
+        "trial_id": "baseline:pr-332"
+      },
+      "sequence": 429,
+      "type": "trial_started"
+    },
+    {
+      "created_at": "2026-10-26T20:53:01+00:00",
+      "message": "baseline: PR #332 did not pass",
+      "payload": {
+        "elapsed_seconds": 22.626,
+        "passed": false,
+        "phase": "baseline",
+        "pr_number": 332,
+        "status": "failed",
+        "trial_id": "baseline:pr-332"
+      },
+      "sequence": 430,
+      "type": "trial_finished"
+    },
+    {
+      "created_at": "2026-10-26T20:53:01+00:00",
+      "message": "baseline: PR #407 — Match list insert before start in BarrelList",
+      "payload": {
+        "phase": "baseline",
+        "pr_number": 407,
+        "trial_id": "baseline:pr-407"
+      },
+      "sequence": 431,
+      "type": "trial_started"
+    },
+    {
+      "created_at": "2026-10-26T20:56:56+00:00",
+      "message": "baseline: PR #407 passed",
+      "payload": {
+        "elapsed_seconds": 222.637,
+        "passed": true,
+        "phase": "baseline",
+        "pr_number": 407,
+        "status": "passed",
+        "trial_id": "baseline:pr-407"
+      },
+      "sequence": 432,
+      "type": "trial_finished"
+    },
+    {
+      "created_at": "2026-10-26T20:56:56+00:00",
+      "message": "baseline: PR #278 — Adds noop function satisfying PEP 559",
+      "payload": {
+        "phase": "baseline",
+        "pr_number": 278,
+        "trial_id": "baseline:pr-278"
+      },
+      "sequence": 433,
+      "type": "trial_started"
+    },
+    {
+      "created_at": "2026-10-26T21:01:10+00:00",
+      "message": "baseline: PR #278 passed",
+      "payload": {
+        "elapsed_seconds": 249.93,
+        "passed": true,
+        "phase": "baseline",
+        "pr_number": 278,
+        "status": "passed",
+        "trial_id": "baseline:pr-278"
+      },
+      "sequence": 434,
+      "type": "trial_finished"
+    },
+    {
+      "created_at": "2026-10-26T21:01:10+00:00",
+      "message": "baseline: PR #455 — Pass encoding through to unquote in parse_qsl",
+      "payload": {
+        "phase": "baseline",
+        "pr_number": 455,
+        "trial_id": "baseline:pr-455"
+      },
+      "sequence": 435,
+      "type": "trial_started"
+    },
+    {
+      "created_at": "2026-10-26T21:05:49+00:00",
+      "message": "baseline: PR #455 passed",
+      "payload": {
+        "elapsed_seconds": 272.191,
+        "passed": true,
+        "phase": "baseline",
+        "pr_number": 455,
+        "status": "passed",
+        "trial_id": "baseline:pr-455"
+      },
+      "sequence": 436,
+      "type": "trial_finished"
+    },
+    {
+      "created_at": "2026-10-26T21:05:49+00:00",
+      "message": "baseline: PR #454 — Use the sep argument in args2sh and args2cmd",
+      "payload": {
+        "phase": "baseline",
+        "pr_number": 454,
+        "trial_id": "baseline:pr-454"
+      },
+      "sequence": 437,
+      "type": "trial_started"
+    },
+    {
+      "created_at": "2026-10-26T21:13:23+00:00",
+      "message": "baseline: PR #454 passed",
+      "payload": {
+        "elapsed_seconds": 449.818,
+        "passed": true,
+        "phase": "baseline",
+        "pr_number": 454,
+        "status": "passed",
+        "trial_id": "baseline:pr-454"
+      },
+      "sequence": 438,
+      "type": "trial_finished"
+    },
+    {
+      "created_at": "2026-10-26T21:13:23+00:00",
+      "message": "baseline: PR #428 — Fix ZeroDivisionError in backoff/backoff_iter with factor=1.0 and no count",
+      "payload": {
+        "phase": "baseline",
+        "pr_number": 428,
+        "trial_id": "baseline:pr-428"
+      },
+      "sequence": 439,
+      "type": "trial_started"
+    },
+    {
+      "created_at": "2026-10-26T21:17:34+00:00",
+      "message": "baseline: PR #428 passed",
+      "payload": {
+        "elapsed_seconds": 245.707,
+        "passed": true,
+        "phase": "baseline",
+        "pr_number": 428,
+        "status": "passed",
+        "trial_id": "baseline:pr-428"
+      },
+      "sequence": 440,
+      "type": "trial_finished"
+    },
+    {
+      "created_at": "2026-10-26T21:17:34+00:00",
+      "message": "baseline: PR #437 — Fix off-by-one in Bits length check",
+      "payload": {
+        "phase": "baseline",
+        "pr_number": 437,
+        "trial_id": "baseline:pr-437"
+      },
+      "sequence": 441,
+      "type": "trial_started"
+    },
+    {
+      "created_at": "2026-10-26T21:24:22+00:00",
+      "message": "baseline: PR #437 passed",
+      "payload": {
+        "elapsed_seconds": 405.159,
+        "passed": true,
+        "phase": "baseline",
+        "pr_number": 437,
+        "status": "passed",
+        "trial_id": "baseline:pr-437"
+      },
+      "sequence": 442,
+      "type": "trial_finished"
+    },
+    {
+      "created_at": "2026-10-26T21:24:22+00:00",
+      "message": "baseline: PR #513 — Fix spooled stream write compatibility and backwards text seeks",
+      "payload": {
+        "phase": "baseline",
+        "pr_number": 513,
+        "trial_id": "baseline:pr-513"
+      },
+      "sequence": 443,
+      "type": "trial_started"
+    },
+    {
+      "created_at": "2026-10-26T21:28:54+00:00",
+      "message": "baseline: PR #513 passed",
+      "payload": {
+        "elapsed_seconds": 269.66,
+        "passed": true,
+        "phase": "baseline",
+        "pr_number": 513,
+        "status": "passed",
+        "trial_id": "baseline:pr-513"
+      },
+      "sequence": 444,
+      "type": "trial_finished"
+    },
+    {
+      "created_at": "2026-10-26T21:28:54+00:00",
+      "message": "baseline: 8/10 regression tests passed",
+      "payload": {
+        "label": "baseline",
+        "passed": 8,
+        "rate": 0.8,
+        "total": 10
+      },
+      "sequence": 445,
+      "type": "score"
+    },
+    {
+      "created_at": "2026-10-26T21:28:54+00:00",
+      "message": "training baseline: 4/6 passed",
+      "payload": {
+        "label": "baseline",
+        "passed": 4,
+        "rate": 0.6666666666666666,
+        "round": 0,
+        "skill_version": "v-927c7620",
+        "split": "training",
+        "total": 6
+      },
+      "sequence": 446,
+      "type": "metric"
+    },
+    {
+      "created_at": "2026-10-26T21:28:54+00:00",
+      "message": "heldout baseline: 4/4 passed",
+      "payload": {
+        "label": "baseline",
+        "passed": 4,
+        "rate": 1.0,
+        "round": null,
+        "skill_version": "v-927c7620",
+        "split": "heldout",
+        "total": 4
+      },
+      "sequence": 447,
+      "type": "metric"
+    },
+    {
+      "created_at": "2026-10-26T21:28:54+00:00",
+      "message": "Running training tasks for round 1",
+      "payload": {},
+      "sequence": 448,
+      "type": "training"
+    },
+    {
+      "created_at": "2026-10-26T21:28:54+00:00",
+      "message": "round_1_current: PR #341 — Support `ior` for `dictutils.OMD`",
+      "payload": {
+        "phase": "round_1_current",
+        "pr_number": 341,
+        "trial_id": "r1-current:pr-341"
+      },
+      "sequence": 449,
+      "type": "trial_started"
+    },
+    {
+      "created_at": "2026-10-26T21:35:21+00:00",
+      "message": "round_1_current: PR #341 passed",
+      "payload": {
+        "elapsed_seconds": 385.3,
+        "passed": true,
+        "phase": "round_1_current",
+        "pr_number": 341,
+        "status": "passed",
+        "trial_id": "r1-current:pr-341"
+      },
+      "sequence": 450,
+      "type": "trial_finished"
+    },
+    {
+      "created_at": "2026-10-26T21:35:21+00:00",
+      "message": "round_1_current: PR #332 — Update tbutils.py to parse tracebacks with anchor lines",
+      "payload": {
+        "phase": "round_1_current",
+        "pr_number": 332,
+        "trial_id": "r1-current:pr-332"
+      },
+      "sequence": 451,
+      "type": "trial_started"
+    },
+    {
+      "created_at": "2026-10-26T21:39:17+00:00",
+      "message": "round_1_current: PR #332 passed",
+      "payload": {
+        "elapsed_seconds": 234.084,
+        "passed": true,
+        "phase": "round_1_current",
+        "pr_number": 332,
+        "status": "passed",
+        "trial_id": "r1-current:pr-332"
+      },
+      "sequence": 452,
+      "type": "trial_finished"
+    },
+    {
+      "created_at": "2026-10-26T21:39:17+00:00",
+      "message": "round_1_current: PR #407 — Match list insert before start in BarrelList",
+      "payload": {
+        "phase": "round_1_current",
+        "pr_number": 407,
+        "trial_id": "r1-current:pr-407"
+      },
+      "sequence": 453,
+      "type": "trial_started"
+    },
+    {
+      "created_at": "2026-10-26T21:41:48+00:00",
+      "message": "round_1_current: PR #407 passed",
+      "payload": {
+        "elapsed_seconds": 149.26,
+        "passed": true,
+        "phase": "round_1_current",
+        "pr_number": 407,
+        "status": "passed",
+        "trial_id": "r1-current:pr-407"
+      },
+      "sequence": 454,
+      "type": "trial_finished"
+    },
+    {
+      "created_at": "2026-10-26T21:41:48+00:00",
+      "message": "round_1_current: PR #278 — Adds noop function satisfying PEP 559",
+      "payload": {
+        "phase": "round_1_current",
+        "pr_number": 278,
+        "trial_id": "r1-current:pr-278"
+      },
+      "sequence": 455,
+      "type": "trial_started"
+    },
+    {
+      "created_at": "2026-10-26T21:45:17+00:00",
+      "message": "round_1_current: PR #278 passed",
+      "payload": {
+        "elapsed_seconds": 206.95,
+        "passed": true,
+        "phase": "round_1_current",
+        "pr_number": 278,
+        "status": "passed",
+        "trial_id": "r1-current:pr-278"
+      },
+      "sequence": 456,
+      "type": "trial_finished"
+    },
+    {
+      "created_at": "2026-10-26T21:45:17+00:00",
+      "message": "round_1_current: PR #454 — Use the sep argument in args2sh and args2cmd",
+      "payload": {
+        "phase": "round_1_current",
+        "pr_number": 454,
+        "trial_id": "r1-current:pr-454"
+      },
+      "sequence": 457,
+      "type": "trial_started"
+    },
+    {
+      "created_at": "2026-10-26T21:47:14+00:00",
+      "message": "round_1_current: PR #454 passed",
+      "payload": {
+        "elapsed_seconds": 115.508,
+        "passed": true,
+        "phase": "round_1_current",
+        "pr_number": 454,
+        "status": "passed",
+        "trial_id": "r1-current:pr-454"
+      },
+      "sequence": 458,
+      "type": "trial_finished"
+    },
+    {
+      "created_at": "2026-10-26T21:47:14+00:00",
+      "message": "round_1_current: PR #437 — Fix off-by-one in Bits length check",
+      "payload": {
+        "phase": "round_1_current",
+        "pr_number": 437,
+        "trial_id": "r1-current:pr-437"
+      },
+      "sequence": 459,
+      "type": "trial_started"
+    },
+    {
+      "created_at": "2026-10-26T21:49:46+00:00",
+      "message": "round_1_current: PR #437 passed",
+      "payload": {
+        "elapsed_seconds": 150.361,
+        "passed": true,
+        "phase": "round_1_current",
+        "pr_number": 437,
+        "status": "passed",
+        "trial_id": "r1-current:pr-437"
+      },
+      "sequence": 460,
+      "type": "trial_finished"
+    },
+    {
+      "created_at": "2026-10-26T21:49:46+00:00",
+      "message": "Asking Alan to improve the skill from round 1 training failures",
+      "payload": {
+        "training_passes": 6,
+        "training_total": 6
+      },
+      "sequence": 461,
+      "type": "evolving"
+    },
+    {
+      "created_at": "2026-10-26T21:51:39+00:00",
+      "message": "round_1_candidate: PR #341 — Support `ior` for `dictutils.OMD`",
+      "payload": {
+        "phase": "round_1_candidate",
+        "pr_number": 341,
+        "trial_id": "r1-candidate:pr-341"
+      },
+      "sequence": 462,
+      "type": "trial_started"
+    },
+    {
+      "created_at": "2026-10-26T21:55:52+00:00",
+      "message": "round_1_candidate: PR #341 passed",
+      "payload": {
+        "elapsed_seconds": 250.475,
+        "passed": true,
+        "phase": "round_1_candidate",
+        "pr_number": 341,
+        "status": "passed",
+        "trial_id": "r1-candidate:pr-341"
+      },
+      "sequence": 463,
+      "type": "trial_finished"
+    },
+    {
+      "created_at": "2026-10-26T21:55:52+00:00",
+      "message": "round_1_candidate: PR #332 — Update tbutils.py to parse tracebacks with anchor lines",
+      "payload": {
+        "phase": "round_1_candidate",
+        "pr_number": 332,
+        "trial_id": "r1-candidate:pr-332"
+      },
+      "sequence": 464,
+      "type": "trial_started"
+    },
+    {
+      "created_at": "2026-10-26T21:57:19+00:00",
+      "message": "round_1_candidate: PR #332 did not pass",
+      "payload": {
+        "elapsed_seconds": 85.172,
+        "passed": false,
+        "phase": "round_1_candidate",
+        "pr_number": 332,
+        "status": "policy_violation",
+        "trial_id": "r1-candidate:pr-332"
+      },
+      "sequence": 465,
+      "type": "trial_finished"
+    },
+    {
+      "created_at": "2026-10-26T21:57:19+00:00",
+      "message": "round_1_candidate: PR #407 — Match list insert before start in BarrelList",
+      "payload": {
+        "phase": "round_1_candidate",
+        "pr_number": 407,
+        "trial_id": "r1-candidate:pr-407"
+      },
+      "sequence": 466,
+      "type": "trial_started"
+    },
+    {
+      "created_at": "2026-10-26T21:58:41+00:00",
+      "message": "round_1_candidate: PR #407 passed",
+      "payload": {
+        "elapsed_seconds": 81.042,
+        "passed": true,
+        "phase": "round_1_candidate",
+        "pr_number": 407,
+        "status": "passed",
+        "trial_id": "r1-candidate:pr-407"
+      },
+      "sequence": 467,
+      "type": "trial_finished"
+    },
+    {
+      "created_at": "2026-10-26T21:58:41+00:00",
+      "message": "round_1_candidate: PR #278 — Adds noop function satisfying PEP 559",
+      "payload": {
+        "phase": "round_1_candidate",
+        "pr_number": 278,
+        "trial_id": "r1-candidate:pr-278"
+      },
+      "sequence": 468,
+      "type": "trial_started"
+    },
+    {
+      "created_at": "2026-10-26T22:00:13+00:00",
+      "message": "round_1_candidate: PR #278 passed",
+      "payload": {
+        "elapsed_seconds": 90.706,
+        "passed": true,
+        "phase": "round_1_candidate",
+        "pr_number": 278,
+        "status": "passed",
+        "trial_id": "r1-candidate:pr-278"
+      },
+      "sequence": 469,
+      "type": "trial_finished"
+    },
+    {
+      "created_at": "2026-10-26T22:00:13+00:00",
+      "message": "round_1_candidate: PR #454 — Use the sep argument in args2sh and args2cmd",
+      "payload": {
+        "phase": "round_1_candidate",
+        "pr_number": 454,
+        "trial_id": "r1-candidate:pr-454"
+      },
+      "sequence": 470,
+      "type": "trial_started"
+    },
+    {
+      "created_at": "2026-10-26T22:02:11+00:00",
+      "message": "round_1_candidate: PR #454 passed",
+      "payload": {
+        "elapsed_seconds": 115.126,
+        "passed": true,
+        "phase": "round_1_candidate",
+        "pr_number": 454,
+        "status": "passed",
+        "trial_id": "r1-candidate:pr-454"
+      },
+      "sequence": 471,
+      "type": "trial_finished"
+    },
+    {
+      "created_at": "2026-10-26T22:02:11+00:00",
+      "message": "round_1_candidate: PR #437 — Fix off-by-one in Bits length check",
+      "payload": {
+        "phase": "round_1_candidate",
+        "pr_number": 437,
+        "trial_id": "r1-candidate:pr-437"
+      },
+      "sequence": 472,
+      "type": "trial_started"
+    },
+    {
+      "created_at": "2026-10-26T22:03:23+00:00",
+      "message": "round_1_candidate: PR #437 passed",
+      "payload": {
+        "elapsed_seconds": 70.037,
+        "passed": true,
+        "phase": "round_1_candidate",
+        "pr_number": 437,
+        "status": "passed",
+        "trial_id": "r1-candidate:pr-437"
+      },
+      "sequence": 473,
+      "type": "trial_finished"
+    },
+    {
+      "created_at": "2026-10-26T22:03:23+00:00",
+      "message": "training round_1: 6/6 passed",
+      "payload": {
+        "label": "round_1",
+        "passed": 6,
+        "rate": 1.0,
+        "round": 1,
+        "skill_version": "v-927c7620",
+        "split": "training",
+        "total": 6
+      },
+      "sequence": 474,
+      "type": "metric"
+    },
+    {
+      "created_at": "2026-10-26T22:03:23+00:00",
+      "message": "Round 1: kept the current skill (5/6 did not improve on 6/6)",
+      "payload": {
+        "candidate_passes": 5,
+        "candidate_version": "v-0210f76b",
+        "current_passes": 6,
+        "round": 1
+      },
+      "sequence": 475,
+      "type": "skill_rejected"
+    },
+    {
+      "created_at": "2026-10-26T22:03:23+00:00",
+      "message": "Running training tasks for round 2",
+      "payload": {},
+      "sequence": 476,
+      "type": "training"
+    },
+    {
+      "created_at": "2026-10-26T22:03:23+00:00",
+      "message": "round_2_current: PR #341 — Support `ior` for `dictutils.OMD`",
+      "payload": {
+        "phase": "round_2_current",
+        "pr_number": 341,
+        "trial_id": "r2-current:pr-341"
+      },
+      "sequence": 477,
+      "type": "trial_started"
+    },
+    {
+      "created_at": "2026-10-26T22:06:12+00:00",
+      "message": "round_2_current: PR #341 passed",
+      "payload": {
+        "elapsed_seconds": 168.065,
+        "passed": true,
+        "phase": "round_2_current",
+        "pr_number": 341,
+        "status": "passed",
+        "trial_id": "r2-current:pr-341"
+      },
+      "sequence": 478,
+      "type": "trial_finished"
+    },
+    {
+      "created_at": "2026-10-26T22:06:12+00:00",
+      "message": "round_2_current: PR #332 — Update tbutils.py to parse tracebacks with anchor lines",
+      "payload": {
+        "phase": "round_2_current",
+        "pr_number": 332,
+        "trial_id": "r2-current:pr-332"
+      },
+      "sequence": 479,
+      "type": "trial_started"
+    },
+    {
+      "created_at": "2026-10-26T22:09:07+00:00",
+      "message": "round_2_current: PR #332 passed",
+      "payload": {
+        "elapsed_seconds": 172.621,
+        "passed": true,
+        "phase": "round_2_current",
+        "pr_number": 332,
+        "status": "passed",
+        "trial_id": "r2-current:pr-332"
+      },
+      "sequence": 480,
+      "type": "trial_finished"
+    },
+    {
+      "created_at": "2026-10-26T22:09:07+00:00",
+      "message": "round_2_current: PR #407 — Match list insert before start in BarrelList",
+      "payload": {
+        "phase": "round_2_current",
+        "pr_number": 407,
+        "trial_id": "r2-current:pr-407"
+      },
+      "sequence": 481,
+      "type": "trial_started"
+    },
+    {
+      "created_at": "2026-10-26T22:10:57+00:00",
+      "message": "round_2_current: PR #407 passed",
+      "payload": {
+        "elapsed_seconds": 108.739,
+        "passed": true,
+        "phase": "round_2_current",
+        "pr_number": 407,
+        "status": "passed",
+        "trial_id": "r2-current:pr-407"
+      },
+      "sequence": 482,
+      "type": "trial_finished"
+    },
+    {
+      "created_at": "2026-10-26T22:10:57+00:00",
+      "message": "round_2_current: PR #278 — Adds noop function satisfying PEP 559",
+      "payload": {
+        "phase": "round_2_current",
+        "pr_number": 278,
+        "trial_id": "r2-current:pr-278"
+      },
+      "sequence": 483,
+      "type": "trial_started"
+    },
+    {
+      "created_at": "2026-10-26T22:12:56+00:00",
+      "message": "round_2_current: PR #278 did not pass",
+      "payload": {
+        "elapsed_seconds": 118.167,
+        "passed": false,
+        "phase": "round_2_current",
+        "pr_number": 278,
+        "status": "policy_violation",
+        "trial_id": "r2-current:pr-278"
+      },
+      "sequence": 484,
+      "type": "trial_finished"
+    },
+    {
+      "created_at": "2026-10-26T22:12:56+00:00",
+      "message": "round_2_current: PR #454 — Use the sep argument in args2sh and args2cmd",
+      "payload": {
+        "phase": "round_2_current",
+        "pr_number": 454,
+        "trial_id": "r2-current:pr-454"
+      },
+      "sequence": 485,
+      "type": "trial_started"
+    },
+    {
+      "created_at": "2026-10-26T22:14:25+00:00",
+      "message": "round_2_current: PR #454 passed",
+      "payload": {
+        "elapsed_seconds": 87.488,
+        "passed": true,
+        "phase": "round_2_current",
+        "pr_number": 454,
+        "status": "passed",
+        "trial_id": "r2-current:pr-454"
+      },
+      "sequence": 486,
+      "type": "trial_finished"
+    },
+    {
+      "created_at": "2026-10-26T22:14:25+00:00",
+      "message": "round_2_current: PR #437 — Fix off-by-one in Bits length check",
+      "payload": {
+        "phase": "round_2_current",
+        "pr_number": 437,
+        "trial_id": "r2-current:pr-437"
+      },
+      "sequence": 487,
+      "type": "trial_started"
+    },
+    {
+      "created_at": "2026-10-26T22:15:26+00:00",
+      "message": "round_2_current: PR #437 passed",
+      "payload": {
+        "elapsed_seconds": 59.117,
+        "passed": true,
+        "phase": "round_2_current",
+        "pr_number": 437,
+        "status": "passed",
+        "trial_id": "r2-current:pr-437"
+      },
+      "sequence": 488,
+      "type": "trial_finished"
+    },
+    {
+      "created_at": "2026-10-26T22:15:26+00:00",
+      "message": "Asking Alan to improve the skill from round 2 training failures",
+      "payload": {
+        "training_passes": 5,
+        "training_total": 6
+      },
+      "sequence": 489,
+      "type": "evolving"
+    },
+    {
+      "created_at": "2026-10-26T22:17:26+00:00",
+      "message": "round_2_candidate: PR #341 — Support `ior` for `dictutils.OMD`",
+      "payload": {
+        "phase": "round_2_candidate",
+        "pr_number": 341,
+        "trial_id": "r2-candidate:pr-341"
+      },
+      "sequence": 490,
+      "type": "trial_started"
+    },
+    {
+      "created_at": "2026-10-26T22:20:40+00:00",
+      "message": "round_2_candidate: PR #341 did not pass",
+      "payload": {
+        "elapsed_seconds": 192.994,
+        "passed": false,
+        "phase": "round_2_candidate",
+        "pr_number": 341,
+        "status": "policy_violation",
+        "trial_id": "r2-candidate:pr-341"
+      },
+      "sequence": 491,
+      "type": "trial_finished"
+    },
+    {
+      "created_at": "2026-10-26T22:20:40+00:00",
+      "message": "round_2_candidate: PR #332 — Update tbutils.py to parse tracebacks with anchor lines",
+      "payload": {
+        "phase": "round_2_candidate",
+        "pr_number": 332,
+        "trial_id": "r2-candidate:pr-332"
+      },
+      "sequence": 492,
+      "type": "trial_started"
+    },
+    {
+      "created_at": "2026-10-26T22:22:40+00:00",
+      "message": "round_2_candidate: PR #332 passed",
+      "payload": {
+        "elapsed_seconds": 119.316,
+        "passed": true,
+        "phase": "round_2_candidate",
+        "pr_number": 332,
+        "status": "passed",
+        "trial_id": "r2-candidate:pr-332"
+      },
+      "sequence": 493,
+      "type": "trial_finished"
+    },
+    {
+      "created_at": "2026-10-26T22:22:40+00:00",
+      "message": "round_2_candidate: PR #407 — Match list insert before start in BarrelList",
+      "payload": {
+        "phase": "round_2_candidate",
+        "pr_number": 407,
+        "trial_id": "r2-candidate:pr-407"
+      },
+      "sequence": 494,
+      "type": "trial_started"
+    },
+    {
+      "created_at": "2026-10-26T22:23:33+00:00",
+      "message": "round_2_candidate: PR #407 passed",
+      "payload": {
+        "elapsed_seconds": 51.192,
+        "passed": true,
+        "phase": "round_2_candidate",
+        "pr_number": 407,
+        "status": "passed",
+        "trial_id": "r2-candidate:pr-407"
+      },
+      "sequence": 495,
+      "type": "trial_finished"
+    },
+    {
+      "created_at": "2026-10-26T22:23:33+00:00",
+      "message": "round_2_candidate: PR #278 — Adds noop function satisfying PEP 559",
+      "payload": {
+        "phase": "round_2_candidate",
+        "pr_number": 278,
+        "trial_id": "r2-candidate:pr-278"
+      },
+      "sequence": 496,
+      "type": "trial_started"
+    },
+    {
+      "created_at": "2026-10-26T22:24:56+00:00",
+      "message": "round_2_candidate: PR #278 passed",
+      "payload": {
+        "elapsed_seconds": 81.976,
+        "passed": true,
+        "phase": "round_2_candidate",
+        "pr_number": 278,
+        "status": "passed",
+        "trial_id": "r2-candidate:pr-278"
+      },
+      "sequence": 497,
+      "type": "trial_finished"
+    },
+    {
+      "created_at": "2026-10-26T22:24:56+00:00",
+      "message": "round_2_candidate: PR #454 — Use the sep argument in args2sh and args2cmd",
+      "payload": {
+        "phase": "round_2_candidate",
+        "pr_number": 454,
+        "trial_id": "r2-candidate:pr-454"
+      },
+      "sequence": 498,
+      "type": "trial_started"
+    },
+    {
+      "created_at": "2026-10-26T22:26:17+00:00",
+      "message": "round_2_candidate: PR #454 passed",
+      "payload": {
+        "elapsed_seconds": 79.305,
+        "passed": true,
+        "phase": "round_2_candidate",
+        "pr_number": 454,
+        "status": "passed",
+        "trial_id": "r2-candidate:pr-454"
+      },
+      "sequence": 499,
+      "type": "trial_finished"
+    },
+    {
+      "created_at": "2026-10-26T22:26:17+00:00",
+      "message": "round_2_candidate: PR #437 — Fix off-by-one in Bits length check",
+      "payload": {
+        "phase": "round_2_candidate",
+        "pr_number": 437,
+        "trial_id": "r2-candidate:pr-437"
+      },
+      "sequence": 500,
+      "type": "trial_started"
+    },
+    {
+      "created_at": "2026-10-26T22:27:09+00:00",
+      "message": "round_2_candidate: PR #437 passed",
+      "payload": {
+        "elapsed_seconds": 51.056,
+        "passed": true,
+        "phase": "round_2_candidate",
+        "pr_number": 437,
+        "status": "passed",
+        "trial_id": "r2-candidate:pr-437"
+      },
+      "sequence": 501,
+      "type": "trial_finished"
+    },
+    {
+      "created_at": "2026-10-26T22:27:09+00:00",
+      "message": "training round_2: 5/6 passed",
+      "payload": {
+        "label": "round_2",
+        "passed": 5,
+        "rate": 0.8333333333333334,
+        "round": 2,
+        "skill_version": "v-927c7620",
+        "split": "training",
+        "total": 6
+      },
+      "sequence": 502,
+      "type": "metric"
+    },
+    {
+      "created_at": "2026-10-26T22:27:09+00:00",
+      "message": "Round 2: kept the current skill (5/6 did not improve on 5/6)",
+      "payload": {
+        "candidate_passes": 5,
+        "candidate_version": "v-35c9f17c",
+        "current_passes": 5,
+        "round": 2
+      },
+      "sequence": 503,
+      "type": "skill_rejected"
+    },
+    {
+      "created_at": "2026-10-26T22:27:09+00:00",
+      "message": "Measuring the selected skill on held-out tasks",
+      "payload": {},
+      "sequence": 504,
+      "type": "evaluating"
+    },
+    {
+      "created_at": "2026-10-26T22:27:09+00:00",
+      "message": "final: PR #247 — Fix NetstringSocket to correctly use arguments to .read_ns() method.",
+      "payload": {
+        "phase": "final",
+        "pr_number": 247,
+        "trial_id": "final:pr-247"
+      },
+      "sequence": 505,
+      "type": "trial_started"
+    },
+    {
+      "created_at": "2026-10-26T22:29:52+00:00",
+      "message": "final: PR #247 passed",
+      "payload": {
+        "elapsed_seconds": 161.916,
+        "passed": true,
+        "phase": "final",
+        "pr_number": 247,
+        "status": "passed",
+        "trial_id": "final:pr-247"
+      },
+      "sequence": 506,
+      "type": "trial_finished"
+    },
+    {
+      "created_at": "2026-10-26T22:29:52+00:00",
+      "message": "final: PR #455 — Pass encoding through to unquote in parse_qsl",
+      "payload": {
+        "phase": "final",
+        "pr_number": 455,
+        "trial_id": "final:pr-455"
+      },
+      "sequence": 507,
+      "type": "trial_started"
+    },
+    {
+      "created_at": "2026-10-26T22:30:54+00:00",
+      "message": "final: PR #455 passed",
+      "payload": {
+        "elapsed_seconds": 60.395,
+        "passed": true,
+        "phase": "final",
+        "pr_number": 455,
+        "status": "passed",
+        "trial_id": "final:pr-455"
+      },
+      "sequence": 508,
+      "type": "trial_finished"
+    },
+    {
+      "created_at": "2026-10-26T22:30:54+00:00",
+      "message": "final: PR #428 — Fix ZeroDivisionError in backoff/backoff_iter with factor=1.0 and no count",
+      "payload": {
+        "phase": "final",
+        "pr_number": 428,
+        "trial_id": "final:pr-428"
+      },
+      "sequence": 509,
+      "type": "trial_started"
+    },
+    {
+      "created_at": "2026-10-26T22:31:38+00:00",
+      "message": "final: PR #428 passed",
+      "payload": {
+        "elapsed_seconds": 42.519,
+        "passed": true,
+        "phase": "final",
+        "pr_number": 428,
+        "status": "passed",
+        "trial_id": "final:pr-428"
+      },
+      "sequence": 510,
+      "type": "trial_finished"
+    },
+    {
+      "created_at": "2026-10-26T22:31:38+00:00",
+      "message": "final: PR #513 — Fix spooled stream write compatibility and backwards text seeks",
+      "payload": {
+        "phase": "final",
+        "pr_number": 513,
+        "trial_id": "final:pr-513"
+      },
+      "sequence": 511,
+      "type": "trial_started"
+    },
+    {
+      "created_at": "2026-10-26T22:34:33+00:00",
+      "message": "final: PR #513 did not pass",
+      "payload": {
+        "elapsed_seconds": 173.166,
+        "passed": false,
+        "phase": "final",
+        "pr_number": 513,
+        "status": "policy_violation",
+        "trial_id": "final:pr-513"
+      },
+      "sequence": 512,
+      "type": "trial_finished"
+    },
+    {
+      "created_at": "2026-10-26T22:34:33+00:00",
+      "message": "final: 3/4 regression tests passed",
+      "payload": {
+        "label": "final",
+        "passed": 3,
+        "rate": 0.75,
+        "total": 4
+      },
+      "sequence": 513,
+      "type": "score"
+    },
+    {
+      "created_at": "2026-10-26T22:34:33+00:00",
+      "message": "heldout final: 3/4 passed",
+      "payload": {
+        "label": "final",
+        "passed": 3,
+        "rate": 0.75,
+        "round": null,
+        "skill_version": "v-927c7620",
+        "split": "heldout",
+        "total": 4
+      },
+      "sequence": 514,
+      "type": "metric"
+    },
+    {
+      "created_at": "2026-10-26T22:34:33+00:00",
+      "message": "Experiment finished with baseline and final held-out results saved",
+      "payload": {
+        "skill_version": "v-927c7620"
+      },
+      "sequence": 515,
+      "type": "complete"
+    }
+  ],
+  "run": {
+    "cost_usd": null,
+    "created_at": "2026-10-26T20:40:37+00:00",
+    "heldout_count": 4,
+    "id": "ee6cafdc34a64b41adcb2fc5528045e1",
+    "model": "deepseek/deepseek-v4.1-flash",
+    "repo": "mahmoud/boltons",
+    "round_number": 2,
+    "seed": 42,
+    "state": "complete",
+    "training_count": 6,
+    "updated_at": "2026-10-26T22:34:33+00:00"
+  },
+  "schema_version": 1,
+  "skills": [
+    {
+      "content": "---\nname: alangym-repair\ndescription: Solve one verified regression task using the same small, testable practices.\n---\n\n# Working a regression task\n\n- Read the relevant source and regression tests before editing.\n- Make the smallest source change that fixes the reported behavior.\n- Preserve the repository's surrounding style and public interfaces.\n- Do not edit tests, project configuration, or files outside the task's allowed source list.\n- Run the frozen regression command if it is available in the environment.\n- Report changed source files and the actual test result. Never claim tests passed unless they ran.\n",
+      "created_at": "2026-10-26T20:45:07+00:00",
+      "parent_version": null,
+      "training_passes": null,
+      "version": "v-927c7620"
+    }
+  ],
+  "tasks": [
+    {
+      "base_sha": "961dcff3f42e73b245aef65e377fe82763b257bb",
+      "fixture_paths": [],
+      "id": "pr-513",
+      "merge_sha": "4e5faa3d7e4008d89e0d8bf1ea87b6d9a061a16d",
+      "merged_at": "2026-09-23T23:55:31Z",
+      "pr_number": 513,
+      "source_paths": [
+        "boltons/ioutils.py"
+      ],
+      "split": "heldout",
+      "test_paths": [
+        "tests/test_ioutils.py"
+      ],
+      "title": "Fix spooled stream write compatibility and backwards text seeks"
+    },
+    {
+      "base_sha": "967864f89791509f9eb36b22b4579d36b72a6df2",
+      "fixture_paths": [],
+      "id": "pr-455",
+      "merge_sha": "d45cc414e33aa4e08a73e0993574df4397e2e9db",
+      "merged_at": "2026-09-07T08:40:45Z",
+      "pr_number": 455,
+      "source_paths": [
+        "boltons/urlutils.py"
+      ],
+      "split": "heldout",
+      "test_paths": [
+        "tests/test_urlutils.py"
+      ],
+      "title": "Pass encoding through to unquote in parse_qsl"
+    },
+    {
+      "base_sha": "673e010d0afabc2f530e8d1f67f0a47c37afa7f4",
+      "fixture_paths": [],
+      "id": "pr-454",
+      "merge_sha": "5df26592c29b9561d122640868ba0522cbc1e20d",
+      "merged_at": "2026-08-19T08:12:13Z",
+      "pr_number": 454,
+      "source_paths": [
+        "boltons/strutils.py"
+      ],
+      "split": "train",
+      "test_paths": [
+        "tests/test_strutils.py"
+      ],
+      "title": "Use the sep argument in args2sh and args2cmd"
+    },
+    {
+      "base_sha": "e66cade323f5c11cebb4bd0f099e634b245adccd",
+      "fixture_paths": [],
+      "id": "pr-437",
+      "merge_sha": "c1c25da365cf14878cf5317147e7a09b5d124df5",
+      "merged_at": "2026-08-06T20:35:48Z",
+      "pr_number": 437,
+      "source_paths": [
+        "boltons/mathutils.py"
+      ],
+      "split": "train",
+      "test_paths": [
+        "tests/test_mathutils.py"
+      ],
+      "title": "Fix off-by-one in Bits length check"
+    },
+    {
+      "base_sha": "57cb026b7f47cd2765a0d5acdc83849ed5f1f6a3",
+      "fixture_paths": [],
+      "id": "pr-428",
+      "merge_sha": "ead236e278ca0466bf468de746b5960fb12d7e5b",
+      "merged_at": "2026-07-18T00:43:23Z",
+      "pr_number": 428,
+      "source_paths": [
+        "boltons/iterutils.py"
+      ],
+      "split": "heldout",
+      "test_paths": [
+        "tests/test_iterutils.py"
+      ],
+      "title": "Fix ZeroDivisionError in backoff/backoff_iter with factor=1.0 and no count"
+    },
+    {
+      "base_sha": "4aa77cddb5d06def130df6f09aefab4018fa487c",
+      "fixture_paths": [],
+      "id": "pr-407",
+      "merge_sha": "25e8d6b18ecba58d358c8f46a5cea554f99bdfb2",
+      "merged_at": "2026-06-19T04:22:17Z",
+      "pr_number": 407,
+      "source_paths": [
+        "boltons/listutils.py"
+      ],
+      "split": "train",
+      "test_paths": [
+        "tests/test_listutils.py"
+      ],
+      "title": "Match list insert before start in BarrelList"
+    },
+    {
+      "base_sha": "c2b04b4cb16410d7bf9ff781c78dee3ca908dc32",
+      "fixture_paths": [],
+      "id": "pr-341",
+      "merge_sha": "46599bc0d498dd8adc3aea833ce1445feed349dd",
+      "merged_at": "2023-05-06T17:25:39Z",
+      "pr_number": 341,
+      "source_paths": [
+        "boltons/dictutils.py"
+      ],
+      "split": "train",
+      "test_paths": [
+        "tests/test_dictutils.py"
+      ],
+      "title": "Support `ior` for `dictutils.OMD`"
+    },
+    {
+      "base_sha": "f892a2b46e7fd31c639723d1d9bf4d9ad63752d6",
+      "fixture_paths": [],
+      "id": "pr-332",
+      "merge_sha": "475462811ea4f9dea23c8af4cc2b6ead2dc03845",
+      "merged_at": "2023-04-02T19:11:27Z",
+      "pr_number": 332,
+      "source_paths": [
+        "boltons/tbutils.py"
+      ],
+      "split": "train",
+      "test_paths": [
+        "tests/test_tbutils_parsed_exc.py"
+      ],
+      "title": "Update tbutils.py to parse tracebacks with anchor lines"
+    },
+    {
+      "base_sha": "aacfe37f733518235999c6b89e72b6680cf79f6d",
+      "fixture_paths": [],
+      "id": "pr-278",
+      "merge_sha": "4a11fbe1c8358bf76edad2c9fefcf4e5809e85a1",
+      "merged_at": "2021-02-22T06:35:25Z",
+      "pr_number": 278,
+      "source_paths": [
+        "boltons/funcutils.py"
+      ],
+      "split": "train",
+      "test_paths": [
+        "tests/test_funcutils.py"
+      ],
+      "title": "Adds noop function satisfying PEP 559"
+    },
+    {
+      "base_sha": "81e44a2319ce0bef0de44f1059762b97879cb35d",
+      "fixture_paths": [],
+      "id": "pr-247",
+      "merge_sha": "fee5adb0f99f91c077c769d8efd269ef44203848",
+      "merged_at": "2020-03-28T20:50:16Z",
+      "pr_number": 247,
+      "source_paths": [
+        "boltons/socketutils.py"
+      ],
+      "split": "heldout",
+      "test_paths": [
+        "tests/test_socketutils.py"
+      ],
+      "title": "Fix NetstringSocket to correctly use arguments to .read_ns() method."
+    }
+  ],
+  "trials": [
+    {
+      "cost_usd": null,
+      "elapsed_seconds": 276.577,
+      "id": "baseline:pr-341",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "passed": false,
+      "phase": "baseline",
+      "pr_number": 341,
+      "skill_version": "v-927c7620",
+      "status": "policy_violation",
+      "task_id": "pr-341",
+      "trace": {
+        "agent_status": "completed",
+        "grader_output": "...........................                                              [100%]\r\n============================== warnings summary ===============================\r\ntests\\conftest.py:8\r\n  [local path] Daithankar\\Desktop\\alan\\.alangym\\runs\\ee6cafdc34a64b41adcb2fc5528045e1\\trials\\baseline-pr-341\\workspace\\tests\\conftest.py:8: PytestRemovedIn9Warning: The (path: py.path.local) argument is deprecated, please use (collection_path: pathlib.Path)\r\n  see https://docs.pytest.org/en/latest/deprecations.html#py-path-local-arguments-for-hooks-replaced-with-pathlib-path\r\n    def pytest_ignore_collect(path, config):\r\n\r\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\r\n27 passed, 1 warning in 0.41s\r\n",
+        "source_diff": "--- a/boltons/dictutils.py\n+++ b/boltons/dictutils.py\n@@ -322,6 +322,10 @@\n             self[k] = F[k]\n         return\n \n+    def __ior__(self, other):\n+        self.update(other)\n+        return self\n+\n     def update_extend(self, E, **F):\n         \"\"\"Add items from a dictionary, iterable, and/or keyword\n         arguments without overwriting existing items present in the",
+        "unauthorized_changes_restored": true
+      }
+    },
+    {
+      "cost_usd": null,
+      "elapsed_seconds": 137.705,
+      "id": "baseline:pr-247",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "passed": true,
+      "phase": "baseline",
+      "pr_number": 247,
+      "skill_version": "v-927c7620",
+      "status": "passed",
+      "task_id": "pr-247",
+      "trace": {
+        "agent_status": "completed",
+        "grader_output": "...........                                                              [100%]\r\n============================== warnings summary ===============================\r\ntests\\conftest.py:8\r\n  [local path] Daithankar\\Desktop\\alan\\.alangym\\runs\\ee6cafdc34a64b41adcb2fc5528045e1\\trials\\baseline-pr-247\\workspace\\tests\\conftest.py:8: PytestRemovedIn9Warning: The (path: py.path.local) argument is deprecated, please use (collection_path: pathlib.Path)\r\n  see https://docs.pytest.org/en/latest/deprecations.html#py-path-local-arguments-for-hooks-replaced-with-pathlib-path\r\n    def pytest_ignore_collect(path, config):\r\n\r\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\r\n11 passed, 1 warning in 4.61s\r\n",
+        "source_diff": "--- a/boltons/socketutils.py\n+++ b/boltons/socketutils.py\n@@ -635,23 +635,32 @@\n \n     def setmaxsize(self, maxsize):\n         self.maxsize = maxsize\n-        self._msgsize_maxsize = len(str(maxsize)) + 1  # len(str()) == log10\n+        self._msgsize_maxsize = self._calc_msgsize_maxsize(maxsize)\n+\n+    def _calc_msgsize_maxsize(self, maxsize):\n+        return len(str(maxsize)) + 1  # len(str()) == log10\n \n     def read_ns(self, timeout=_UNSET, maxsize=_UNSET):\n         if timeout is _UNSET:\n             timeout = self.timeout\n \n+        if maxsize is _UNSET:\n+            maxsize = self.maxsize\n+            msgsize_maxsize = self._msgsize_maxsize\n+        else:\n+            msgsize_maxsize = self._calc_msgsize_maxsize(maxsize)\n+\n         size_prefix = self.bsock.recv_until(b':',\n-                                            timeout=self.timeout,\n-                                            maxsize=self._msgsize_maxsize)\n+                                            timeout=timeout,\n+                                            maxsize=msgsize_maxsize)\n         try:\n             size = int(size_prefix)\n         except ValueError:\n             raise NetstringInvalidSize('netstring message size must be valid'\n                                        ' integer, not %r' % size_prefix)\n \n-        if size > self.maxsize:\n-            raise NetstringMessageTooLong(size, self.maxsize)\n+        if size > maxsize:\n+            raise NetstringMessageTooLong(size, maxsize)\n         payload = self.bsock.recv_size(size)\n         if self.bsock.recv(1) != b',':\n             raise NetstringProtocolError(\"expected trailing ',' after message\")",
+        "unauthorized_changes_restored": false
+      }
+    },
+    {
+      "cost_usd": null,
+      "elapsed_seconds": 22.626,
+      "id": "baseline:pr-332",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "passed": false,
+      "phase": "baseline",
+      "pr_number": 332,
+      "skill_version": "v-927c7620",
+      "status": "failed",
+      "task_id": "pr-332",
+      "trace": {
+        "agent_status": "failed",
+        "grader_output": "..F                                                                      [100%]\r\n================================== FAILURES ===================================\r\n_________________________ test_parsed_exc_with_anchor _________________________\r\n\r\n    def test_parsed_exc_with_anchor():\r\n        \"\"\"parse a traceback with anchor lines beneath source lines\"\"\"\r\n        _tb_str = u\"\"\"\\\r\n    Traceback (most recent call last):\r\n      File \"main.py\", line 3, in <module>\r\n        print(add(1, \"two\"))\r\n              ^^^^^^^^^^^^^\r\n      File \"add.py\", line 2, in add\r\n        return a + b\r\n               ~~^~~\r\n    TypeError: unsupported operand type(s) for +: 'int' and 'str'\"\"\"\r\n    \r\n        parsed_tb = ParsedException.from_string(_tb_str)\r\n    \r\n>       assert parsed_tb.exc_type == 'TypeError'\r\nE       assert '          ^^...~~\\nTypeError' == 'TypeError'\r\nE         \r\nE         +           ^^^^^^^^^^^^^\r\nE         +   File \"add.py\", line 2, in add\r\nE         +     return a + b\r\nE         +            ~~^~~\r\nE           TypeError\r\n\r\ntests\\test_tbutils_parsed_exc.py:69: AssertionError\r\n============================== warnings summary ===============================\r\ntests\\conftest.py:8\r\n  [local path] Daithankar\\Desktop\\alan\\.alangym\\runs\\ee6cafdc34a64b41adcb2fc5528045e1\\trials\\baseline-pr-332\\workspace\\tests\\conftest.py:8: PytestRemovedIn9Warning: The (path: py.path.local) argument is deprecated, please use (collection_path: pathlib.Path)\r\n  see https://docs.pytest.org/en/latest/deprecations.html#py-path-local-arguments-for-hooks-replaced-with-pathlib-path\r\n    def pytest_ignore_collect(path, config):\r\n\r\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\r\n=========================== short test summary info ===========================\r\nFAILED tests/test_tbutils_parsed_exc.py::test_parsed_exc_with_anchor - assert '          ^^...~~\\nTypeError' == 'TypeError'\r\n  \r\n  +           ^^^^^^^^^^^^^\r\n  +   File \"add.py\", line 2, in add\r\n  +     return a + b\r\n  +            ~~^~~\r\n    TypeError\r\n1 failed, 2 passed, 1 warning in 0.54s\r\n",
+        "source_diff": "",
+        "unauthorized_changes_restored": false
+      }
+    },
+    {
+      "cost_usd": null,
+      "elapsed_seconds": 222.637,
+      "id": "baseline:pr-407",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "passed": true,
+      "phase": "baseline",
+      "pr_number": 407,
+      "skill_version": "v-927c7620",
+      "status": "passed",
+      "task_id": "pr-407",
+      "trace": {
+        "agent_status": "completed",
+        "grader_output": "....                                                                     [100%]\r\n4 passed in 1.36s\r\n",
+        "source_diff": "--- a/boltons/listutils.py\n+++ b/boltons/listutils.py\n@@ -139,7 +139,8 @@\n         else:\n             list_idx, rel_idx = self._translate_index(index)\n             if list_idx is None:\n-                raise IndexError()\n+                # match list.insert() and clamp indexes before the start\n+                list_idx, rel_idx = 0, 0\n             self.lists[list_idx].insert(rel_idx, item)\n             self._balance_list(list_idx)\n         return",
+        "unauthorized_changes_restored": false
+      }
+    },
+    {
+      "cost_usd": null,
+      "elapsed_seconds": 249.93,
+      "id": "baseline:pr-278",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "passed": true,
+      "phase": "baseline",
+      "pr_number": 278,
+      "skill_version": "v-927c7620",
+      "status": "passed",
+      "task_id": "pr-278",
+      "trace": {
+        "agent_status": "completed",
+        "grader_output": ".....                                                                    [100%]\r\n============================== warnings summary ===============================\r\ntests\\conftest.py:8\r\n  [local path] Daithankar\\Desktop\\alan\\.alangym\\runs\\ee6cafdc34a64b41adcb2fc5528045e1\\trials\\baseline-pr-278\\workspace\\tests\\conftest.py:8: PytestRemovedIn9Warning: The (path: py.path.local) argument is deprecated, please use (collection_path: pathlib.Path)\r\n  see https://docs.pytest.org/en/latest/deprecations.html#py-path-local-arguments-for-hooks-replaced-with-pathlib-path\r\n    def pytest_ignore_collect(path, config):\r\n\r\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\r\n5 passed, 1 warning in 0.19s\r\n",
+        "source_diff": "--- a/boltons/funcutils.py\n+++ b/boltons/funcutils.py\n@@ -101,6 +101,17 @@\n         if 'return' in annotations:\n             result += formatreturns(formatannotation(annotations['return']))\n         return result\n+\n+\n+def noop(*args, **kwargs):\n+    \"\"\"A no-op function, which accepts any arguments and returns ``None``.\n+\n+    Useful as a default callback or placeholder.\n+\n+    >>> noop(1, 2) is None\n+    True\n+    \"\"\"\n+    return None\n \n \n def get_module_callables(mod, ignore=None):",
+        "unauthorized_changes_restored": false
+      }
+    },
+    {
+      "cost_usd": null,
+      "elapsed_seconds": 272.191,
+      "id": "baseline:pr-455",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "passed": true,
+      "phase": "baseline",
+      "pr_number": 455,
+      "skill_version": "v-927c7620",
+      "status": "passed",
+      "task_id": "pr-455",
+      "trace": {
+        "agent_status": "completed",
+        "grader_output": "........................................................................ [ 57%]\r\n......................................................                   [100%]\r\n126 passed in 1.17s\r\n",
+        "source_diff": "--- a/boltons/urlutils.py\n+++ b/boltons/urlutils.py\n@@ -964,9 +964,9 @@\n                 value = None\n             else:\n                 continue\n-        key = unquote(key.replace('+', ' '))\n+        key = unquote(key.replace('+', ' '), encoding=encoding)\n         if value:\n-            value = unquote(value.replace('+', ' '))\n+            value = unquote(value.replace('+', ' '), encoding=encoding)\n         ret.append((key, value))\n     return ret\n ",
+        "unauthorized_changes_restored": false
+      }
+    },
+    {
+      "cost_usd": null,
+      "elapsed_seconds": 449.818,
+      "id": "baseline:pr-454",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "passed": true,
+      "phase": "baseline",
+      "pr_number": 454,
+      "skill_version": "v-927c7620",
+      "status": "passed",
+      "task_id": "pr-454",
+      "trace": {
+        "agent_status": "completed",
+        "grader_output": ".......................                                                  [100%]\r\n23 passed in 0.55s\r\n",
+        "source_diff": "--- a/boltons/strutils.py\n+++ b/boltons/strutils.py\n@@ -798,7 +798,7 @@\n         # the string $'b is then quoted as '$'\"'\"'b'\n         ret_list.append(\"'\" + arg.replace(\"'\", \"'\\\"'\\\"'\") + \"'\")\n \n-    return ' '.join(ret_list)\n+    return sep.join(ret_list)\n \n \n def args2cmd(args, sep=' '):\n@@ -845,9 +845,9 @@\n     for arg in args:\n         bs_buf = []\n \n-        # Add a space to separate this argument from the others\n+        # Add the separator to separate this argument from the others\n         if result:\n-            result.append(' ')\n+            result.append(sep)\n \n         needquote = (\" \" in arg) or (\"\\t\" in arg) or not arg\n         if needquote:",
+        "unauthorized_changes_restored": false
+      }
+    },
+    {
+      "cost_usd": null,
+      "elapsed_seconds": 245.707,
+      "id": "baseline:pr-428",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "passed": true,
+      "phase": "baseline",
+      "pr_number": 428,
+      "skill_version": "v-927c7620",
+      "status": "passed",
+      "task_id": "pr-428",
+      "trace": {
+        "agent_status": "completed",
+        "grader_output": ".............................................                            [100%]\r\n45 passed in 1.25s\r\n",
+        "source_diff": "--- a/boltons/iterutils.py\n+++ b/boltons/iterutils.py\n@@ -647,9 +647,16 @@\n     if stop < start:\n         raise ValueError('expected stop >= start, not %r' % stop)\n     if count is None:\n-        denom = start if start else 1\n-        count = 1 + math.ceil(math.log(stop/denom, factor))\n-        count = count if start else count + 1\n+        if factor == 1.0:\n+            if start == stop:\n+                count = 1\n+            else:\n+                raise ValueError('expected factor > 1.0 to infer count from'\n+                                 ' start and stop, not %r' % factor)\n+        else:\n+            denom = start if start else 1\n+            count = 1 + math.ceil(math.log(stop/denom, factor))\n+            count = count if start else count + 1\n     if count != 'repeat' and count < 0:\n         raise ValueError('count must be positive or \"repeat\", not %r' % count)\n     if jitter:",
+        "unauthorized_changes_restored": false
+      }
+    },
+    {
+      "cost_usd": null,
+      "elapsed_seconds": 405.159,
+      "id": "baseline:pr-437",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "passed": true,
+      "phase": "baseline",
+      "pr_number": 437,
+      "skill_version": "v-927c7620",
+      "status": "passed",
+      "task_id": "pr-437",
+      "trace": {
+        "agent_status": "completed",
+        "grader_output": "............                                                             [100%]\r\n12 passed in 0.10s\r\n",
+        "source_diff": "--- a/boltons/mathutils.py\n+++ b/boltons/mathutils.py\n@@ -161,7 +161,7 @@\n             raise ValueError('Bits cannot represent negative values')\n         if len_ is None:\n             len_ = len(f'{val:b}')\n-        if val > 2 ** len_:\n+        if val >= 2 ** len_:\n             raise ValueError(f'value {val} cannot be represented with {len_} bits')\n         self.val = val  # data is stored internally as integer\n         self.len = len_",
+        "unauthorized_changes_restored": false
+      }
+    },
+    {
+      "cost_usd": null,
+      "elapsed_seconds": 269.66,
+      "id": "baseline:pr-513",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "passed": true,
+      "phase": "baseline",
+      "pr_number": 513,
+      "skill_version": "v-927c7620",
+      "status": "passed",
+      "task_id": "pr-513",
+      "trace": {
+        "agent_status": "completed",
+        "grader_output": "........................................................................ [ 81%]\r\n................                                                         [100%]\r\n88 passed in 0.24s\r\n",
+        "source_diff": "--- a/boltons/ioutils.py\n+++ b/boltons/ioutils.py\n@@ -301,14 +301,16 @@\n \n     def write(self, s):\n         self._checkClosed()\n-        if not isinstance(s, bytes):\n+        try:\n+            view = memoryview(s)\n+        except TypeError:\n             raise TypeError(\"bytes expected, got {}\".format(\n                 type(s).__name__\n             ))\n \n-        if self.tell() + len(s) >= self._max_size:\n+        if self.tell() + view.nbytes >= self._max_size:\n             self.rollover()\n-        self.buffer.write(s)\n+        return self.buffer.write(view)\n \n     def seek(self, pos, mode=0):\n         self._checkClosed()\n@@ -403,6 +405,7 @@\n             self.rollover()\n         self.buffer.write(s.encode('utf-8'))\n         self._tell = current_pos + len(s)\n+        return len(s)\n \n     def _traverse_codepoints(self, current_position, n):\n         \"\"\"Traverse from current position to the right n codepoints\"\"\"\n@@ -435,23 +438,31 @@\n         self._checkClosed()\n         # Seek to position from the start of the file\n         if mode == os.SEEK_SET:\n-            self.buffer.seek(0)\n-            self._traverse_codepoints(0, pos)\n-            self._tell = pos\n+            dest_position = pos\n         # Seek to new position relative to current position\n         elif mode == os.SEEK_CUR:\n-            start_pos = self.tell()\n-            self._traverse_codepoints(self.tell(), pos)\n-            self._tell = start_pos + pos\n+            dest_position = self.tell() + pos\n         elif mode == os.SEEK_END:\n-            self.buffer.seek(0)\n             dest_position = self.len - pos\n-            self._traverse_codepoints(0, dest_position)\n-            self._tell = dest_position\n         else:\n             raise ValueError(\n                 f\"Invalid whence ({mode}, should be 0, 1, or 2)\"\n             )\n+\n+        if dest_position < 0:\n+            raise ValueError(\n+                f\"Negative seek destination ({dest_position}) not allowed\"\n+            )\n+\n+        # Backwards movement requires restarting from the beginning, as\n+        # codepoints are variable-width in the underlying byte stream.\n+        if mode == os.SEEK_END or dest_position < self.tell():\n+            self.buffer.seek(0)\n+            self._tell = 0\n+\n+        self._traverse_codepoints(self.tell(),\n+                                  dest_position - self.tell())\n+        self._tell = dest_position\n         return self.tell()\n \n     def readline(self, length=None):",
+        "unauthorized_changes_restored": false
+      }
+    },
+    {
+      "cost_usd": null,
+      "elapsed_seconds": 385.3,
+      "id": "r1-current:pr-341",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "passed": true,
+      "phase": "round_1_current",
+      "pr_number": 341,
+      "skill_version": "v-927c7620",
+      "status": "passed",
+      "task_id": "pr-341",
+      "trace": {
+        "agent_status": "completed",
+        "grader_output": "...........................                                              [100%]\r\n============================== warnings summary ===============================\r\ntests\\conftest.py:8\r\n  [local path] Daithankar\\Desktop\\alan\\.alangym\\runs\\ee6cafdc34a64b41adcb2fc5528045e1\\trials\\r1-current-pr-341\\workspace\\tests\\conftest.py:8: PytestRemovedIn9Warning: The (path: py.path.local) argument is deprecated, please use (collection_path: pathlib.Path)\r\n  see https://docs.pytest.org/en/latest/deprecations.html#py-path-local-arguments-for-hooks-replaced-with-pathlib-path\r\n    def pytest_ignore_collect(path, config):\r\n\r\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\r\n27 passed, 1 warning in 0.17s\r\n",
+        "source_diff": "--- a/boltons/dictutils.py\n+++ b/boltons/dictutils.py\n@@ -386,6 +386,10 @@\n     def __ne__(self, other):\n         return not (self == other)\n \n+    def __ior__(self, other):\n+        self.update(other)\n+        return self\n+\n     def pop(self, k, default=_MISSING):\n         \"\"\"Remove all values under key *k*, returning the most-recently\n         inserted value. Raises :exc:`KeyError` if the key is not",
+        "unauthorized_changes_restored": false
+      }
+    },
+    {
+      "cost_usd": null,
+      "elapsed_seconds": 234.084,
+      "id": "r1-current:pr-332",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "passed": true,
+      "phase": "round_1_current",
+      "pr_number": 332,
+      "skill_version": "v-927c7620",
+      "status": "passed",
+      "task_id": "pr-332",
+      "trace": {
+        "agent_status": "completed",
+        "grader_output": "...                                                                      [100%]\r\n============================== warnings summary ===============================\r\ntests\\conftest.py:8\r\n  [local path] Daithankar\\Desktop\\alan\\.alangym\\runs\\ee6cafdc34a64b41adcb2fc5528045e1\\trials\\r1-current-pr-332\\workspace\\tests\\conftest.py:8: PytestRemovedIn9Warning: The (path: py.path.local) argument is deprecated, please use (collection_path: pathlib.Path)\r\n  see https://docs.pytest.org/en/latest/deprecations.html#py-path-local-arguments-for-hooks-replaced-with-pathlib-path\r\n    def pytest_ignore_collect(path, config):\r\n\r\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\r\n3 passed, 1 warning in 0.06s\r\n",
+        "source_diff": "--- a/boltons/tbutils.py\n+++ b/boltons/tbutils.py\n@@ -684,6 +684,13 @@\n _se_frame_re = re.compile(r'^File \"(?P<filepath>.+)\", line (?P<lineno>\\d+)')\n \n \n+def _is_anchor_line(line):\n+    # Anchor lines mark the erroring portion of a source line, e.g.\n+    # \"    ^^^^^\" or \"    ~~^~~\". They carry no data ParsedException stores.\n+    stripped = line.strip()\n+    return bool(stripped) and not stripped.strip('^~')\n+\n+\n # TODO: ParsedException generator over large bodies of text\n \n class ParsedException(object):\n@@ -813,6 +820,8 @@\n             else:\n                 break\n             line_no += 1\n+            while line_no < len(tb_lines) and _is_anchor_line(tb_lines[line_no]):\n+                line_no += 1\n             frames.append(frame_dict)\n \n         try:",
+        "unauthorized_changes_restored": false
+      }
+    },
+    {
+      "cost_usd": null,
+      "elapsed_seconds": 149.26,
+      "id": "r1-current:pr-407",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "passed": true,
+      "phase": "round_1_current",
+      "pr_number": 407,
+      "skill_version": "v-927c7620",
+      "status": "passed",
+      "task_id": "pr-407",
+      "trace": {
+        "agent_status": "completed",
+        "grader_output": "....                                                                     [100%]\r\n4 passed in 0.71s\r\n",
+        "source_diff": "--- a/boltons/listutils.py\n+++ b/boltons/listutils.py\n@@ -139,7 +139,9 @@\n         else:\n             list_idx, rel_idx = self._translate_index(index)\n             if list_idx is None:\n-                raise IndexError()\n+                # index was below the start, clamp to the beginning like\n+                # built-in list.insert()\n+                list_idx, rel_idx = 0, 0\n             self.lists[list_idx].insert(rel_idx, item)\n             self._balance_list(list_idx)\n         return",
+        "unauthorized_changes_restored": false
+      }
+    },
+    {
+      "cost_usd": null,
+      "elapsed_seconds": 206.95,
+      "id": "r1-current:pr-278",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "passed": true,
+      "phase": "round_1_current",
+      "pr_number": 278,
+      "skill_version": "v-927c7620",
+      "status": "passed",
+      "task_id": "pr-278",
+      "trace": {
+        "agent_status": "completed",
+        "grader_output": ".....                                                                    [100%]\r\n============================== warnings summary ===============================\r\ntests\\conftest.py:8\r\n  [local path] Daithankar\\Desktop\\alan\\.alangym\\runs\\ee6cafdc34a64b41adcb2fc5528045e1\\trials\\r1-current-pr-278\\workspace\\tests\\conftest.py:8: PytestRemovedIn9Warning: The (path: py.path.local) argument is deprecated, please use (collection_path: pathlib.Path)\r\n  see https://docs.pytest.org/en/latest/deprecations.html#py-path-local-arguments-for-hooks-replaced-with-pathlib-path\r\n    def pytest_ignore_collect(path, config):\r\n\r\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\r\n5 passed, 1 warning in 0.07s\r\n",
+        "source_diff": "--- a/boltons/funcutils.py\n+++ b/boltons/funcutils.py\n@@ -101,6 +101,14 @@\n         if 'return' in annotations:\n             result += formatreturns(formatannotation(annotations['return']))\n         return result\n+\n+\n+def noop(*args, **kwargs):\n+    \"\"\"A no-op function, which does nothing and returns None.\n+\n+    Useful as a default value for a callback or a placeholder.\n+    \"\"\"\n+    return None\n \n \n def get_module_callables(mod, ignore=None):",
+        "unauthorized_changes_restored": false
+      }
+    },
+    {
+      "cost_usd": null,
+      "elapsed_seconds": 115.508,
+      "id": "r1-current:pr-454",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "passed": true,
+      "phase": "round_1_current",
+      "pr_number": 454,
+      "skill_version": "v-927c7620",
+      "status": "passed",
+      "task_id": "pr-454",
+      "trace": {
+        "agent_status": "completed",
+        "grader_output": ".......................                                                  [100%]\r\n23 passed in 0.18s\r\n",
+        "source_diff": "--- a/boltons/strutils.py\n+++ b/boltons/strutils.py\n@@ -798,7 +798,7 @@\n         # the string $'b is then quoted as '$'\"'\"'b'\n         ret_list.append(\"'\" + arg.replace(\"'\", \"'\\\"'\\\"'\") + \"'\")\n \n-    return ' '.join(ret_list)\n+    return sep.join(ret_list)\n \n \n def args2cmd(args, sep=' '):\n@@ -845,9 +845,9 @@\n     for arg in args:\n         bs_buf = []\n \n-        # Add a space to separate this argument from the others\n+        # Add a separator to separate this argument from the others\n         if result:\n-            result.append(' ')\n+            result.append(sep)\n \n         needquote = (\" \" in arg) or (\"\\t\" in arg) or not arg\n         if needquote:",
+        "unauthorized_changes_restored": false
+      }
+    },
+    {
+      "cost_usd": null,
+      "elapsed_seconds": 150.361,
+      "id": "r1-current:pr-437",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "passed": true,
+      "phase": "round_1_current",
+      "pr_number": 437,
+      "skill_version": "v-927c7620",
+      "status": "passed",
+      "task_id": "pr-437",
+      "trace": {
+        "agent_status": "completed",
+        "grader_output": "............                                                             [100%]\r\n12 passed in 0.19s\r\n",
+        "source_diff": "--- a/boltons/mathutils.py\n+++ b/boltons/mathutils.py\n@@ -161,7 +161,7 @@\n             raise ValueError('Bits cannot represent negative values')\n         if len_ is None:\n             len_ = len(f'{val:b}')\n-        if val > 2 ** len_:\n+        if val >= 2 ** len_:\n             raise ValueError(f'value {val} cannot be represented with {len_} bits')\n         self.val = val  # data is stored internally as integer\n         self.len = len_",
+        "unauthorized_changes_restored": false
+      }
+    },
+    {
+      "cost_usd": null,
+      "elapsed_seconds": 250.475,
+      "id": "r1-candidate:pr-341",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "passed": true,
+      "phase": "round_1_candidate",
+      "pr_number": 341,
+      "skill_version": "v-0210f76b",
+      "status": "passed",
+      "task_id": "pr-341",
+      "trace": {
+        "agent_status": "completed",
+        "grader_output": "...........................                                              [100%]\r\n============================== warnings summary ===============================\r\ntests\\conftest.py:8\r\n  [local path] Daithankar\\Desktop\\alan\\.alangym\\runs\\ee6cafdc34a64b41adcb2fc5528045e1\\trials\\r1-candidate-pr-341\\workspace\\tests\\conftest.py:8: PytestRemovedIn9Warning: The (path: py.path.local) argument is deprecated, please use (collection_path: pathlib.Path)\r\n  see https://docs.pytest.org/en/latest/deprecations.html#py-path-local-arguments-for-hooks-replaced-with-pathlib-path\r\n    def pytest_ignore_collect(path, config):\r\n\r\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\r\n27 passed, 1 warning in 0.18s\r\n",
+        "source_diff": "--- a/boltons/dictutils.py\n+++ b/boltons/dictutils.py\n@@ -386,6 +386,10 @@\n     def __ne__(self, other):\n         return not (self == other)\n \n+    def __ior__(self, other):\n+        self.update(other)\n+        return self\n+\n     def pop(self, k, default=_MISSING):\n         \"\"\"Remove all values under key *k*, returning the most-recently\n         inserted value. Raises :exc:`KeyError` if the key is not",
+        "unauthorized_changes_restored": false
+      }
+    },
+    {
+      "cost_usd": null,
+      "elapsed_seconds": 85.172,
+      "id": "r1-candidate:pr-332",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "passed": false,
+      "phase": "round_1_candidate",
+      "pr_number": 332,
+      "skill_version": "v-0210f76b",
+      "status": "policy_violation",
+      "task_id": "pr-332",
+      "trace": {
+        "agent_status": "completed",
+        "grader_output": "...                                                                      [100%]\r\n============================== warnings summary ===============================\r\ntests\\conftest.py:8\r\n  [local path] Daithankar\\Desktop\\alan\\.alangym\\runs\\ee6cafdc34a64b41adcb2fc5528045e1\\trials\\r1-candidate-pr-332\\workspace\\tests\\conftest.py:8: PytestRemovedIn9Warning: The (path: py.path.local) argument is deprecated, please use (collection_path: pathlib.Path)\r\n  see https://docs.pytest.org/en/latest/deprecations.html#py-path-local-arguments-for-hooks-replaced-with-pathlib-path\r\n    def pytest_ignore_collect(path, config):\r\n\r\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\r\n3 passed, 1 warning in 0.06s\r\n",
+        "source_diff": "--- a/boltons/tbutils.py\n+++ b/boltons/tbutils.py\n@@ -810,6 +810,14 @@\n                 else:\n                     frame_dict['source_line'] = next_line_stripped\n                     line_no += 1\n+                    # Skip anchor lines (e.g. \"^^^^\" or \"~~^~~\") which\n+                    # some Python versions add below the source line.\n+                    try:\n+                        anchor_line = tb_lines[line_no + 1].strip()\n+                    except IndexError:\n+                        anchor_line = ''\n+                    if anchor_line and set(anchor_line) <= set('^~ '):\n+                        line_no += 1\n             else:\n                 break\n             line_no += 1",
+        "unauthorized_changes_restored": true
+      }
+    },
+    {
+      "cost_usd": null,
+      "elapsed_seconds": 81.042,
+      "id": "r1-candidate:pr-407",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "passed": true,
+      "phase": "round_1_candidate",
+      "pr_number": 407,
+      "skill_version": "v-0210f76b",
+      "status": "passed",
+      "task_id": "pr-407",
+      "trace": {
+        "agent_status": "completed",
+        "grader_output": "....                                                                     [100%]\r\n4 passed in 0.47s\r\n",
+        "source_diff": "--- a/boltons/listutils.py\n+++ b/boltons/listutils.py\n@@ -139,7 +139,8 @@\n         else:\n             list_idx, rel_idx = self._translate_index(index)\n             if list_idx is None:\n-                raise IndexError()\n+                # like list.insert, clamp indexes before the start\n+                list_idx, rel_idx = 0, 0\n             self.lists[list_idx].insert(rel_idx, item)\n             self._balance_list(list_idx)\n         return",
+        "unauthorized_changes_restored": false
+      }
+    },
+    {
+      "cost_usd": null,
+      "elapsed_seconds": 90.706,
+      "id": "r1-candidate:pr-278",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "passed": true,
+      "phase": "round_1_candidate",
+      "pr_number": 278,
+      "skill_version": "v-0210f76b",
+      "status": "passed",
+      "task_id": "pr-278",
+      "trace": {
+        "agent_status": "completed",
+        "grader_output": ".....                                                                    [100%]\r\n============================== warnings summary ===============================\r\ntests\\conftest.py:8\r\n  [local path] Daithankar\\Desktop\\alan\\.alangym\\runs\\ee6cafdc34a64b41adcb2fc5528045e1\\trials\\r1-candidate-pr-278\\workspace\\tests\\conftest.py:8: PytestRemovedIn9Warning: The (path: py.path.local) argument is deprecated, please use (collection_path: pathlib.Path)\r\n  see https://docs.pytest.org/en/latest/deprecations.html#py-path-local-arguments-for-hooks-replaced-with-pathlib-path\r\n    def pytest_ignore_collect(path, config):\r\n\r\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\r\n5 passed, 1 warning in 0.12s\r\n",
+        "source_diff": "--- a/boltons/funcutils.py\n+++ b/boltons/funcutils.py\n@@ -101,6 +101,20 @@\n         if 'return' in annotations:\n             result += formatreturns(formatannotation(annotations['return']))\n         return result\n+\n+\n+def noop(*args, **kwargs):\n+    \"\"\"A function that does nothing, and returns ``None``.\n+\n+    Useful as a default callback or placeholder where a callable is\n+    expected but no action is desired.\n+\n+    >>> noop() is None\n+    True\n+    >>> noop(1, 2, a=3) is None\n+    True\n+    \"\"\"\n+    pass\n \n \n def get_module_callables(mod, ignore=None):",
+        "unauthorized_changes_restored": false
+      }
+    },
+    {
+      "cost_usd": null,
+      "elapsed_seconds": 115.126,
+      "id": "r1-candidate:pr-454",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "passed": true,
+      "phase": "round_1_candidate",
+      "pr_number": 454,
+      "skill_version": "v-0210f76b",
+      "status": "passed",
+      "task_id": "pr-454",
+      "trace": {
+        "agent_status": "completed",
+        "grader_output": ".......................                                                  [100%]\r\n23 passed in 0.16s\r\n",
+        "source_diff": "--- a/boltons/strutils.py\n+++ b/boltons/strutils.py\n@@ -798,7 +798,7 @@\n         # the string $'b is then quoted as '$'\"'\"'b'\n         ret_list.append(\"'\" + arg.replace(\"'\", \"'\\\"'\\\"'\") + \"'\")\n \n-    return ' '.join(ret_list)\n+    return sep.join(ret_list)\n \n \n def args2cmd(args, sep=' '):\n@@ -845,9 +845,9 @@\n     for arg in args:\n         bs_buf = []\n \n-        # Add a space to separate this argument from the others\n+        # Add the separator to separate this argument from the others\n         if result:\n-            result.append(' ')\n+            result.append(sep)\n \n         needquote = (\" \" in arg) or (\"\\t\" in arg) or not arg\n         if needquote:",
+        "unauthorized_changes_restored": false
+      }
+    },
+    {
+      "cost_usd": null,
+      "elapsed_seconds": 70.037,
+      "id": "r1-candidate:pr-437",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "passed": true,
+      "phase": "round_1_candidate",
+      "pr_number": 437,
+      "skill_version": "v-0210f76b",
+      "status": "passed",
+      "task_id": "pr-437",
+      "trace": {
+        "agent_status": "completed",
+        "grader_output": "............                                                             [100%]\r\n12 passed in 0.08s\r\n",
+        "source_diff": "--- a/boltons/mathutils.py\n+++ b/boltons/mathutils.py\n@@ -161,7 +161,7 @@\n             raise ValueError('Bits cannot represent negative values')\n         if len_ is None:\n             len_ = len(f'{val:b}')\n-        if val > 2 ** len_:\n+        if val >= 2 ** len_:\n             raise ValueError(f'value {val} cannot be represented with {len_} bits')\n         self.val = val  # data is stored internally as integer\n         self.len = len_",
+        "unauthorized_changes_restored": false
+      }
+    },
+    {
+      "cost_usd": null,
+      "elapsed_seconds": 168.065,
+      "id": "r2-current:pr-341",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "passed": true,
+      "phase": "round_2_current",
+      "pr_number": 341,
+      "skill_version": "v-927c7620",
+      "status": "passed",
+      "task_id": "pr-341",
+      "trace": {
+        "agent_status": "completed",
+        "grader_output": "...........................                                              [100%]\r\n============================== warnings summary ===============================\r\ntests\\conftest.py:8\r\n  [local path] Daithankar\\Desktop\\alan\\.alangym\\runs\\ee6cafdc34a64b41adcb2fc5528045e1\\trials\\r2-current-pr-341\\workspace\\tests\\conftest.py:8: PytestRemovedIn9Warning: The (path: py.path.local) argument is deprecated, please use (collection_path: pathlib.Path)\r\n  see https://docs.pytest.org/en/latest/deprecations.html#py-path-local-arguments-for-hooks-replaced-with-pathlib-path\r\n    def pytest_ignore_collect(path, config):\r\n\r\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\r\n27 passed, 1 warning in 0.15s\r\n",
+        "source_diff": "--- a/boltons/dictutils.py\n+++ b/boltons/dictutils.py\n@@ -322,6 +322,10 @@\n             self[k] = F[k]\n         return\n \n+    def __ior__(self, other):\n+        self.update(other)\n+        return self\n+\n     def update_extend(self, E, **F):\n         \"\"\"Add items from a dictionary, iterable, and/or keyword\n         arguments without overwriting existing items present in the",
+        "unauthorized_changes_restored": false
+      }
+    },
+    {
+      "cost_usd": null,
+      "elapsed_seconds": 172.621,
+      "id": "r2-current:pr-332",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "passed": true,
+      "phase": "round_2_current",
+      "pr_number": 332,
+      "skill_version": "v-927c7620",
+      "status": "passed",
+      "task_id": "pr-332",
+      "trace": {
+        "agent_status": "completed",
+        "grader_output": "...                                                                      [100%]\r\n============================== warnings summary ===============================\r\ntests\\conftest.py:8\r\n  [local path] Daithankar\\Desktop\\alan\\.alangym\\runs\\ee6cafdc34a64b41adcb2fc5528045e1\\trials\\r2-current-pr-332\\workspace\\tests\\conftest.py:8: PytestRemovedIn9Warning: The (path: py.path.local) argument is deprecated, please use (collection_path: pathlib.Path)\r\n  see https://docs.pytest.org/en/latest/deprecations.html#py-path-local-arguments-for-hooks-replaced-with-pathlib-path\r\n    def pytest_ignore_collect(path, config):\r\n\r\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\r\n3 passed, 1 warning in 0.07s\r\n",
+        "source_diff": "--- a/boltons/tbutils.py\n+++ b/boltons/tbutils.py\n@@ -810,6 +810,12 @@\n                 else:\n                     frame_dict['source_line'] = next_line_stripped\n                     line_no += 1\n+                    # Skip anchor lines (e.g. \"^^^^\", \"~~^~~\") which newer\n+                    # Pythons emit beneath the source line\n+                    while (line_no + 1 < len(tb_lines)\n+                           and tb_lines[line_no + 1].strip()\n+                           and set(tb_lines[line_no + 1].strip()) <= set('^~')):\n+                        line_no += 1\n             else:\n                 break\n             line_no += 1",
+        "unauthorized_changes_restored": false
+      }
+    },
+    {
+      "cost_usd": null,
+      "elapsed_seconds": 108.739,
+      "id": "r2-current:pr-407",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "passed": true,
+      "phase": "round_2_current",
+      "pr_number": 407,
+      "skill_version": "v-927c7620",
+      "status": "passed",
+      "task_id": "pr-407",
+      "trace": {
+        "agent_status": "completed",
+        "grader_output": "....                                                                     [100%]\r\n4 passed in 0.41s\r\n",
+        "source_diff": "--- a/boltons/listutils.py\n+++ b/boltons/listutils.py\n@@ -139,7 +139,8 @@\n         else:\n             list_idx, rel_idx = self._translate_index(index)\n             if list_idx is None:\n-                raise IndexError()\n+                # like list.insert(), clamp indexes before the start\n+                list_idx, rel_idx = 0, 0\n             self.lists[list_idx].insert(rel_idx, item)\n             self._balance_list(list_idx)\n         return",
+        "unauthorized_changes_restored": false
+      }
+    },
+    {
+      "cost_usd": null,
+      "elapsed_seconds": 118.167,
+      "id": "r2-current:pr-278",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "passed": false,
+      "phase": "round_2_current",
+      "pr_number": 278,
+      "skill_version": "v-927c7620",
+      "status": "policy_violation",
+      "task_id": "pr-278",
+      "trace": {
+        "agent_status": "completed",
+        "grader_output": ".....                                                                    [100%]\r\n============================== warnings summary ===============================\r\ntests\\conftest.py:8\r\n  [local path] Daithankar\\Desktop\\alan\\.alangym\\runs\\ee6cafdc34a64b41adcb2fc5528045e1\\trials\\r2-current-pr-278\\workspace\\tests\\conftest.py:8: PytestRemovedIn9Warning: The (path: py.path.local) argument is deprecated, please use (collection_path: pathlib.Path)\r\n  see https://docs.pytest.org/en/latest/deprecations.html#py-path-local-arguments-for-hooks-replaced-with-pathlib-path\r\n    def pytest_ignore_collect(path, config):\r\n\r\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\r\n5 passed, 1 warning in 0.07s\r\n",
+        "source_diff": "--- a/boltons/funcutils.py\n+++ b/boltons/funcutils.py\n@@ -1075,4 +1075,13 @@\n                 setattr(cls, opname, opfunc)\n         return cls\n \n+def noop(*args, **kwargs):\n+    \"\"\"A function that does nothing.\n+\n+    Accepts any arguments and returns ``None``. Useful as a default\n+    callback or placeholder.\n+    \"\"\"\n+    return None\n+\n+\n # end funcutils.py",
+        "unauthorized_changes_restored": true
+      }
+    },
+    {
+      "cost_usd": null,
+      "elapsed_seconds": 87.488,
+      "id": "r2-current:pr-454",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "passed": true,
+      "phase": "round_2_current",
+      "pr_number": 454,
+      "skill_version": "v-927c7620",
+      "status": "passed",
+      "task_id": "pr-454",
+      "trace": {
+        "agent_status": "completed",
+        "grader_output": ".......................                                                  [100%]\r\n23 passed in 0.14s\r\n",
+        "source_diff": "--- a/boltons/strutils.py\n+++ b/boltons/strutils.py\n@@ -798,7 +798,7 @@\n         # the string $'b is then quoted as '$'\"'\"'b'\n         ret_list.append(\"'\" + arg.replace(\"'\", \"'\\\"'\\\"'\") + \"'\")\n \n-    return ' '.join(ret_list)\n+    return sep.join(ret_list)\n \n \n def args2cmd(args, sep=' '):\n@@ -845,9 +845,9 @@\n     for arg in args:\n         bs_buf = []\n \n-        # Add a space to separate this argument from the others\n+        # Add a separator to separate this argument from the others\n         if result:\n-            result.append(' ')\n+            result.append(sep)\n \n         needquote = (\" \" in arg) or (\"\\t\" in arg) or not arg\n         if needquote:",
+        "unauthorized_changes_restored": false
+      }
+    },
+    {
+      "cost_usd": null,
+      "elapsed_seconds": 59.117,
+      "id": "r2-current:pr-437",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "passed": true,
+      "phase": "round_2_current",
+      "pr_number": 437,
+      "skill_version": "v-927c7620",
+      "status": "passed",
+      "task_id": "pr-437",
+      "trace": {
+        "agent_status": "completed",
+        "grader_output": "............                                                             [100%]\r\n12 passed in 0.08s\r\n",
+        "source_diff": "--- a/boltons/mathutils.py\n+++ b/boltons/mathutils.py\n@@ -161,7 +161,7 @@\n             raise ValueError('Bits cannot represent negative values')\n         if len_ is None:\n             len_ = len(f'{val:b}')\n-        if val > 2 ** len_:\n+        if val >= 2 ** len_:\n             raise ValueError(f'value {val} cannot be represented with {len_} bits')\n         self.val = val  # data is stored internally as integer\n         self.len = len_",
+        "unauthorized_changes_restored": false
+      }
+    },
+    {
+      "cost_usd": null,
+      "elapsed_seconds": 192.994,
+      "id": "r2-candidate:pr-341",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "passed": false,
+      "phase": "round_2_candidate",
+      "pr_number": 341,
+      "skill_version": "v-35c9f17c",
+      "status": "policy_violation",
+      "task_id": "pr-341",
+      "trace": {
+        "agent_status": "completed",
+        "grader_output": "...........................                                              [100%]\r\n============================== warnings summary ===============================\r\ntests\\conftest.py:8\r\n  [local path] Daithankar\\Desktop\\alan\\.alangym\\runs\\ee6cafdc34a64b41adcb2fc5528045e1\\trials\\r2-candidate-pr-341\\workspace\\tests\\conftest.py:8: PytestRemovedIn9Warning: The (path: py.path.local) argument is deprecated, please use (collection_path: pathlib.Path)\r\n  see https://docs.pytest.org/en/latest/deprecations.html#py-path-local-arguments-for-hooks-replaced-with-pathlib-path\r\n    def pytest_ignore_collect(path, config):\r\n\r\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\r\n27 passed, 1 warning in 0.17s\r\n",
+        "source_diff": "--- a/boltons/dictutils.py\n+++ b/boltons/dictutils.py\n@@ -386,6 +386,10 @@\n     def __ne__(self, other):\n         return not (self == other)\n \n+    def __ior__(self, other):\n+        self.update(other)\n+        return self\n+\n     def pop(self, k, default=_MISSING):\n         \"\"\"Remove all values under key *k*, returning the most-recently\n         inserted value. Raises :exc:`KeyError` if the key is not",
+        "unauthorized_changes_restored": true
+      }
+    },
+    {
+      "cost_usd": null,
+      "elapsed_seconds": 119.316,
+      "id": "r2-candidate:pr-332",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "passed": true,
+      "phase": "round_2_candidate",
+      "pr_number": 332,
+      "skill_version": "v-35c9f17c",
+      "status": "passed",
+      "task_id": "pr-332",
+      "trace": {
+        "agent_status": "completed",
+        "grader_output": "...                                                                      [100%]\r\n============================== warnings summary ===============================\r\ntests\\conftest.py:8\r\n  [local path] Daithankar\\Desktop\\alan\\.alangym\\runs\\ee6cafdc34a64b41adcb2fc5528045e1\\trials\\r2-candidate-pr-332\\workspace\\tests\\conftest.py:8: PytestRemovedIn9Warning: The (path: py.path.local) argument is deprecated, please use (collection_path: pathlib.Path)\r\n  see https://docs.pytest.org/en/latest/deprecations.html#py-path-local-arguments-for-hooks-replaced-with-pathlib-path\r\n    def pytest_ignore_collect(path, config):\r\n\r\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\r\n3 passed, 1 warning in 0.05s\r\n",
+        "source_diff": "--- a/boltons/tbutils.py\n+++ b/boltons/tbutils.py\n@@ -682,7 +682,7 @@\n _frame_re = re.compile(r'^File \"(?P<filepath>.+)\", line (?P<lineno>\\d+)'\n                        r', in (?P<funcname>.+)$')\n _se_frame_re = re.compile(r'^File \"(?P<filepath>.+)\", line (?P<lineno>\\d+)')\n-\n+_underline_re = re.compile(r'^[~^ ]*$')\n \n # TODO: ParsedException generator over large bodies of text\n \n@@ -810,6 +810,9 @@\n                 else:\n                     frame_dict['source_line'] = next_line_stripped\n                     line_no += 1\n+                if _underline_re.match(tb_lines[line_no + 1]):\n+                  # To deal with anchors\n+                  line_no += 1\n             else:\n                 break\n             line_no += 1",
+        "unauthorized_changes_restored": false
+      }
+    },
+    {
+      "cost_usd": null,
+      "elapsed_seconds": 51.192,
+      "id": "r2-candidate:pr-407",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "passed": true,
+      "phase": "round_2_candidate",
+      "pr_number": 407,
+      "skill_version": "v-35c9f17c",
+      "status": "passed",
+      "task_id": "pr-407",
+      "trace": {
+        "agent_status": "completed",
+        "grader_output": "....                                                                     [100%]\r\n4 passed in 0.35s\r\n",
+        "source_diff": "--- a/boltons/listutils.py\n+++ b/boltons/listutils.py\n@@ -139,7 +139,9 @@\n         else:\n             list_idx, rel_idx = self._translate_index(index)\n             if list_idx is None:\n-                raise IndexError()\n+                # Match list.insert(), which clamps indexes before the\n+                # start of the list to 0.\n+                list_idx, rel_idx = 0, 0\n             self.lists[list_idx].insert(rel_idx, item)\n             self._balance_list(list_idx)\n         return",
+        "unauthorized_changes_restored": false
+      }
+    },
+    {
+      "cost_usd": null,
+      "elapsed_seconds": 81.976,
+      "id": "r2-candidate:pr-278",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "passed": true,
+      "phase": "round_2_candidate",
+      "pr_number": 278,
+      "skill_version": "v-35c9f17c",
+      "status": "passed",
+      "task_id": "pr-278",
+      "trace": {
+        "agent_status": "completed",
+        "grader_output": ".....                                                                    [100%]\r\n============================== warnings summary ===============================\r\ntests\\conftest.py:8\r\n  [local path] Daithankar\\Desktop\\alan\\.alangym\\runs\\ee6cafdc34a64b41adcb2fc5528045e1\\trials\\r2-candidate-pr-278\\workspace\\tests\\conftest.py:8: PytestRemovedIn9Warning: The (path: py.path.local) argument is deprecated, please use (collection_path: pathlib.Path)\r\n  see https://docs.pytest.org/en/latest/deprecations.html#py-path-local-arguments-for-hooks-replaced-with-pathlib-path\r\n    def pytest_ignore_collect(path, config):\r\n\r\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\r\n5 passed, 1 warning in 0.06s\r\n",
+        "source_diff": "--- a/boltons/funcutils.py\n+++ b/boltons/funcutils.py\n@@ -101,6 +101,18 @@\n         if 'return' in annotations:\n             result += formatreturns(formatannotation(annotations['return']))\n         return result\n+\n+\n+def noop(*args, **kwargs):\n+    \"\"\"A no-op function which accepts any arguments and returns None.\n+\n+    Useful as a default or placeholder callback, or when a function\n+    needs to be passed somewhere but no action is required.\n+\n+    >>> noop()\n+    >>> noop(1, 2, a=3)\n+    \"\"\"\n+    return None\n \n \n def get_module_callables(mod, ignore=None):",
+        "unauthorized_changes_restored": false
+      }
+    },
+    {
+      "cost_usd": null,
+      "elapsed_seconds": 79.305,
+      "id": "r2-candidate:pr-454",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "passed": true,
+      "phase": "round_2_candidate",
+      "pr_number": 454,
+      "skill_version": "v-35c9f17c",
+      "status": "passed",
+      "task_id": "pr-454",
+      "trace": {
+        "agent_status": "completed",
+        "grader_output": ".......................                                                  [100%]\r\n23 passed in 0.14s\r\n",
+        "source_diff": "--- a/boltons/strutils.py\n+++ b/boltons/strutils.py\n@@ -798,7 +798,7 @@\n         # the string $'b is then quoted as '$'\"'\"'b'\n         ret_list.append(\"'\" + arg.replace(\"'\", \"'\\\"'\\\"'\") + \"'\")\n \n-    return ' '.join(ret_list)\n+    return sep.join(ret_list)\n \n \n def args2cmd(args, sep=' '):\n@@ -845,9 +845,9 @@\n     for arg in args:\n         bs_buf = []\n \n-        # Add a space to separate this argument from the others\n+        # Separate this argument from the others\n         if result:\n-            result.append(' ')\n+            result.append(sep)\n \n         needquote = (\" \" in arg) or (\"\\t\" in arg) or not arg\n         if needquote:",
+        "unauthorized_changes_restored": false
+      }
+    },
+    {
+      "cost_usd": null,
+      "elapsed_seconds": 51.056,
+      "id": "r2-candidate:pr-437",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "passed": true,
+      "phase": "round_2_candidate",
+      "pr_number": 437,
+      "skill_version": "v-35c9f17c",
+      "status": "passed",
+      "task_id": "pr-437",
+      "trace": {
+        "agent_status": "completed",
+        "grader_output": "............                                                             [100%]\r\n12 passed in 0.07s\r\n",
+        "source_diff": "--- a/boltons/mathutils.py\n+++ b/boltons/mathutils.py\n@@ -161,7 +161,7 @@\n             raise ValueError('Bits cannot represent negative values')\n         if len_ is None:\n             len_ = len(f'{val:b}')\n-        if val > 2 ** len_:\n+        if val >= 2 ** len_:\n             raise ValueError(f'value {val} cannot be represented with {len_} bits')\n         self.val = val  # data is stored internally as integer\n         self.len = len_",
+        "unauthorized_changes_restored": false
+      }
+    },
+    {
+      "cost_usd": null,
+      "elapsed_seconds": 161.916,
+      "id": "final:pr-247",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "passed": true,
+      "phase": "final",
+      "pr_number": 247,
+      "skill_version": "v-927c7620",
+      "status": "passed",
+      "task_id": "pr-247",
+      "trace": {
+        "agent_status": "completed",
+        "grader_output": "...........                                                              [100%]\r\n============================== warnings summary ===============================\r\ntests\\conftest.py:8\r\n  [local path] Daithankar\\Desktop\\alan\\.alangym\\runs\\ee6cafdc34a64b41adcb2fc5528045e1\\trials\\final-pr-247\\workspace\\tests\\conftest.py:8: PytestRemovedIn9Warning: The (path: py.path.local) argument is deprecated, please use (collection_path: pathlib.Path)\r\n  see https://docs.pytest.org/en/latest/deprecations.html#py-path-local-arguments-for-hooks-replaced-with-pathlib-path\r\n    def pytest_ignore_collect(path, config):\r\n\r\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\r\n11 passed, 1 warning in 0.41s\r\n",
+        "source_diff": "--- a/boltons/socketutils.py\n+++ b/boltons/socketutils.py\n@@ -640,18 +640,20 @@\n     def read_ns(self, timeout=_UNSET, maxsize=_UNSET):\n         if timeout is _UNSET:\n             timeout = self.timeout\n+        if maxsize is _UNSET:\n+            maxsize = self.maxsize\n \n         size_prefix = self.bsock.recv_until(b':',\n-                                            timeout=self.timeout,\n-                                            maxsize=self._msgsize_maxsize)\n+                                            timeout=timeout,\n+                                            maxsize=len(str(maxsize)) + 1)\n         try:\n             size = int(size_prefix)\n         except ValueError:\n             raise NetstringInvalidSize('netstring message size must be valid'\n                                        ' integer, not %r' % size_prefix)\n \n-        if size > self.maxsize:\n-            raise NetstringMessageTooLong(size, self.maxsize)\n+        if size > maxsize:\n+            raise NetstringMessageTooLong(size, maxsize)\n         payload = self.bsock.recv_size(size)\n         if self.bsock.recv(1) != b',':\n             raise NetstringProtocolError(\"expected trailing ',' after message\")",
+        "unauthorized_changes_restored": false
+      }
+    },
+    {
+      "cost_usd": null,
+      "elapsed_seconds": 60.395,
+      "id": "final:pr-455",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "passed": true,
+      "phase": "final",
+      "pr_number": 455,
+      "skill_version": "v-927c7620",
+      "status": "passed",
+      "task_id": "pr-455",
+      "trace": {
+        "agent_status": "completed",
+        "grader_output": "........................................................................ [ 57%]\r\n......................................................                   [100%]\r\n126 passed in 0.34s\r\n",
+        "source_diff": "--- a/boltons/urlutils.py\n+++ b/boltons/urlutils.py\n@@ -964,9 +964,9 @@\n                 value = None\n             else:\n                 continue\n-        key = unquote(key.replace('+', ' '))\n+        key = unquote(key.replace('+', ' '), encoding=encoding)\n         if value:\n-            value = unquote(value.replace('+', ' '))\n+            value = unquote(value.replace('+', ' '), encoding=encoding)\n         ret.append((key, value))\n     return ret\n ",
+        "unauthorized_changes_restored": false
+      }
+    },
+    {
+      "cost_usd": null,
+      "elapsed_seconds": 42.519,
+      "id": "final:pr-428",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "passed": true,
+      "phase": "final",
+      "pr_number": 428,
+      "skill_version": "v-927c7620",
+      "status": "passed",
+      "task_id": "pr-428",
+      "trace": {
+        "agent_status": "completed",
+        "grader_output": ".............................................                            [100%]\r\n45 passed in 0.44s\r\n",
+        "source_diff": "--- a/boltons/iterutils.py\n+++ b/boltons/iterutils.py\n@@ -648,8 +648,14 @@\n         raise ValueError('expected stop >= start, not %r' % stop)\n     if count is None:\n         denom = start if start else 1\n-        count = 1 + math.ceil(math.log(stop/denom, factor))\n-        count = count if start else count + 1\n+        if factor == 1.0:\n+            if start != stop:\n+                raise ValueError('cannot infer count for factor=1.0 unless'\n+                                 ' start == stop, not %r and %r' % (start, stop))\n+            count = 1\n+        else:\n+            count = 1 + math.ceil(math.log(stop/denom, factor))\n+            count = count if start else count + 1\n     if count != 'repeat' and count < 0:\n         raise ValueError('count must be positive or \"repeat\", not %r' % count)\n     if jitter:",
+        "unauthorized_changes_restored": false
+      }
+    },
+    {
+      "cost_usd": null,
+      "elapsed_seconds": 173.166,
+      "id": "final:pr-513",
+      "model": "deepseek/deepseek-v4.1-flash",
+      "passed": false,
+      "phase": "final",
+      "pr_number": 513,
+      "skill_version": "v-927c7620",
+      "status": "policy_violation",
+      "task_id": "pr-513",
+      "trace": {
+        "agent_status": "completed",
+        "grader_output": "........................................................................ [ 81%]\r\n................                                                         [100%]\r\n88 passed in 0.46s\r\n",
+        "source_diff": "--- a/boltons/ioutils.py\n+++ b/boltons/ioutils.py\n@@ -302,13 +302,20 @@\n     def write(self, s):\n         self._checkClosed()\n         if not isinstance(s, bytes):\n-            raise TypeError(\"bytes expected, got {}\".format(\n-                type(s).__name__\n-            ))\n+            try:\n+                # Accept any buffer-protocol object (memoryview,\n+                # bytearray, arrays, etc.) and normalize to bytes so\n+                # lengths below are counted in bytes, not items.\n+                s = memoryview(s).tobytes()\n+            except TypeError:\n+                raise TypeError(\"bytes expected, got {}\".format(\n+                    type(s).__name__\n+                ))\n \n         if self.tell() + len(s) >= self._max_size:\n             self.rollover()\n         self.buffer.write(s)\n+        return len(s)\n \n     def seek(self, pos, mode=0):\n         self._checkClosed()\n@@ -403,6 +410,7 @@\n             self.rollover()\n         self.buffer.write(s.encode('utf-8'))\n         self._tell = current_pos + len(s)\n+        return len(s)\n \n     def _traverse_codepoints(self, current_position, n):\n         \"\"\"Traverse from current position to the right n codepoints\"\"\"\n@@ -435,17 +443,36 @@\n         self._checkClosed()\n         # Seek to position from the start of the file\n         if mode == os.SEEK_SET:\n+            if pos < 0:\n+                raise ValueError(\n+                    \"Negative seek destination ({})\".format(pos))\n             self.buffer.seek(0)\n             self._traverse_codepoints(0, pos)\n             self._tell = pos\n         # Seek to new position relative to current position\n         elif mode == os.SEEK_CUR:\n             start_pos = self.tell()\n-            self._traverse_codepoints(self.tell(), pos)\n-            self._tell = start_pos + pos\n+            dest_position = start_pos + pos\n+            if dest_position < 0:\n+                raise ValueError(\n+                    \"Negative seek destination ({})\".format(dest_position))\n+            if pos < 0:\n+                # Backwards movement must restart from the beginning;\n+                # traversing a negative offset from the current byte\n+                # position would otherwise consume the rest of the buffer.\n+                self.buffer.seek(0)\n+                self._traverse_codepoints(0, dest_position)\n+            else:\n+                self._traverse_codepoints(start_pos, pos)\n+            self._tell = dest_position\n         elif mode == os.SEEK_END:\n+            current_pos = self.tell()\n+            dest_position = self.len - pos\n+            self._tell = current_pos\n+            if dest_position < 0:\n+                raise ValueError(\n+                    \"Negative seek destination ({})\".format(dest_position))\n             self.buffer.seek(0)\n-            dest_position = self.len - pos\n             self._traverse_codepoints(0, dest_position)\n             self._tell = dest_position\n         else:",
+        "unauthorized_changes_restored": true
+      }
+    }
+  ]
+}
