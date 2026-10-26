@@ -33,6 +33,8 @@ class CreateRunRequest(BaseModel):
         allowed = set("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_.-/")
         if not owner or not name or any(character not in allowed for character in value):
             raise ValueError("Use a simple GitHub owner/name slug.")
+        if owner in {".", ".."} or name in {".", ".."} or owner.startswith("-") or name.startswith("-"):
+            raise ValueError("Repository names cannot be path segments or command flags.")
         return value
 
 

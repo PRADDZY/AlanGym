@@ -12,7 +12,7 @@ from typing import Any
 from .mining import PullRequestCandidate, parse_candidate, select_candidates
 
 
-REPOSITORY_SLUG = re.compile(r"^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$")
+REPOSITORY_SLUG = re.compile(r"^(?!-)[A-Za-z0-9_.-]+/(?!-)[A-Za-z0-9_.-]+$")
 PR_FIELDS = "number,title,body,mergedAt,mergeCommit,baseRefOid,files"
 
 
@@ -28,6 +28,8 @@ class PublicGitHubRepository:
             raise ValueError("Repository must use a simple owner/name slug")
         self.slug = slug
         owner, name = slug.split("/", maxsplit=1)
+        if owner in {".", ".."} or name in {".", ".."}:
+            raise ValueError("Repository names cannot be dot path segments")
         self.path = cache_root / f"{owner}--{name}"
 
     def prepare(self) -> Path:
@@ -39,6 +41,8 @@ class PublicGitHubRepository:
         if metadata.get("nameWithOwner", "").casefold() != self.slug.casefold():
             raise RepositoryError("GitHub resolved a different repository than requested")
         self.path.parent.mkdir(parents=True, exist_ok=True)
+        if self.path.is_symlink():
+            raise RepositoryError("Cached repository path must not be a symbolic link")
         if not self.path.exists():
             self._run_gh("repo", "clone", self.slug, str(self.path), "--", "--filter=blob:none", "--no-checkout")
         else:

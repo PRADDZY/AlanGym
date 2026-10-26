@@ -6,6 +6,7 @@ __pycache__/
 htmlcov/
 node_modules/
 web/dist/
+web/tsconfig.tsbuildinfo
 .alangym/
 runs/
 .worktrees/
