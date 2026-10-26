@@ -220,9 +220,15 @@ class AlanRunner:
                 )
                 await asyncio.wait_for(killer.wait(), timeout=5)
             except (OSError, TimeoutError):
-                process.kill()
+                try:
+                    process.kill()
+                except ProcessLookupError:
+                    pass
         else:
-            process.kill()
+            try:
+                process.kill()
+            except ProcessLookupError:
+                pass
 
     def _limit_trace(self, value: str) -> str:
         if len(value) <= self.trace_limit:

@@ -83,6 +83,19 @@ def test_runner_terminates_a_trial_after_timeout(monkeypatch, tmp_path):
     assert len(stopped) == 1
 
 
+def test_runner_tolerates_process_exiting_during_tree_termination(monkeypatch):
+    async def start_taskkill(*args, **kwargs):
+        raise ProcessLookupError("Alan process already exited")
+
+    def kill_exited_process():
+        raise ProcessLookupError("Alan process already exited")
+
+    process = SimpleNamespace(returncode=None, pid=123, kill=kill_exited_process)
+    monkeypatch.setattr("alangym.alan.asyncio.create_subprocess_exec", start_taskkill)
+
+    asyncio.run(AlanRunner._terminate_tree(process))
+
+
 def test_runner_does_not_start_without_the_cli(monkeypatch, tmp_path):
     monkeypatch.setattr("alangym.alan.shutil.which", lambda _: None)
 
