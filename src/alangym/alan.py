@@ -62,6 +62,20 @@ def _alan_node_modules(executable: str) -> Path | None:
     return None
 
 
+def _resolve_executable(executable: str) -> str | None:
+    """Resolve the Alan binary, bypassing the Windows npm batch shim."""
+    resolved = shutil.which(executable)
+    if resolved is None or os.name != "nt":
+        return resolved
+
+    wrapper = Path(resolved)
+    if wrapper.suffix.lower() in {".cmd", ".bat"}:
+        direct_binary = wrapper.parent / "node_modules" / "alan-code" / "bin" / "alan-code.exe"
+        if direct_binary.is_file():
+            return str(direct_binary)
+    return resolved
+
+
 class RunStatus(StrEnum):
     COMPLETED = "completed"
     TIMED_OUT = "timed_out"
@@ -104,7 +118,7 @@ class AlanRunner:
         tool_path: Path | None = None,
     ) -> AgentResult:
         """Run a single bounded task without exposing unrelated environment secrets."""
-        resolved_executable = shutil.which(self.executable)
+        resolved_executable = _resolve_executable(self.executable)
         if resolved_executable is None:
             raise RuntimeError("Alan Code CLI is not installed or is not available on PATH")
         if not workspace.is_dir():
