@@ -4,7 +4,7 @@ from types import SimpleNamespace
 
 import pytest
 
-from alangym.alan import AlanRunner, RunStatus
+from alangym.alan import AlanRunner, RunStatus, _ensure_engine_binary_alias
 
 
 def test_runner_pins_model_and_drops_inherited_secrets(monkeypatch, tmp_path):
@@ -45,6 +45,25 @@ def test_runner_pins_model_and_drops_inherited_secrets(monkeypatch, tmp_path):
     child_path = invocation["kwargs"]["env"]["PATH"].split(os.pathsep)
     assert child_path[:2] == [str(path) for path in executable_paths]
     assert invocation["kwargs"]["env"]["NODE_PATH"] == str(node_modules)
+
+
+def test_engine_binary_is_exposed_to_alan_resolver(tmp_path):
+    node_modules = tmp_path / "alan" / "node_modules"
+    binary_name = "opencode.exe" if os.name == "nt" else "opencode"
+    source = node_modules / "opencode-ai" / "bin" / binary_name
+    source.parent.mkdir(parents=True)
+    source.write_bytes(b"engine")
+
+    workspace = tmp_path / "runs" / "run-1" / "trials" / "trial-1" / "workspace"
+    workspace.mkdir(parents=True)
+
+    _ensure_engine_binary_alias(workspace, node_modules)
+
+    alias_dir = workspace.parent.parent / "node_modules" / "opencode-ai" / "bin"
+    alias = alias_dir / binary_name
+    assert alias_dir.is_dir()
+    assert alias.is_file()
+    assert alias.read_bytes() == b"engine"
 
 
 def test_runner_reports_missing_alan_login(monkeypatch, tmp_path):

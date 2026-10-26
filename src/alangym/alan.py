@@ -76,6 +76,52 @@ def _resolve_executable(executable: str) -> str | None:
     return resolved
 
 
+def _ensure_engine_binary_alias(workspace: Path, node_modules: Path | None) -> None:
+    """Expose opencode where Alan's bundled resolver searches from its cwd."""
+    if node_modules is None:
+        return
+
+    binary_name = "opencode.exe" if os.name == "nt" else "opencode"
+    source_dir = node_modules / "opencode-ai" / "bin"
+    source = source_dir / binary_name
+    if not source.is_file():
+        return
+
+    # Alan resolves its engine from cwd/../../node_modules rather than PATH.
+    alias_dir = workspace.parent.parent / "node_modules" / "opencode-ai" / "bin"
+    alias_dir.parent.mkdir(parents=True, exist_ok=True)
+    if alias_dir.exists() or alias_dir.is_symlink():
+        try:
+            if os.path.samefile(source_dir, alias_dir):
+                return
+        except OSError:
+            pass
+        alias = alias_dir / binary_name
+        try:
+            if os.path.samefile(source, alias):
+                return
+        except OSError:
+            pass
+        if alias_dir.is_symlink():
+            alias_dir.unlink()
+        else:
+            raise RuntimeError(f"Alan engine alias path is occupied: {alias_dir}")
+
+    try:
+        os.symlink(source_dir, alias_dir, target_is_directory=True)
+    except OSError:
+        alias_dir.mkdir(parents=True, exist_ok=True)
+        alias = alias_dir / binary_name
+        try:
+            os.link(source, alias)
+        except OSError:
+            # Keep copied Windows binaries writable so temporary runs can clean up.
+            if os.name == "nt":
+                shutil.copyfile(source, alias)
+            else:
+                shutil.copy2(source, alias)
+
+
 class RunStatus(StrEnum):
     COMPLETED = "completed"
     TIMED_OUT = "timed_out"
@@ -140,6 +186,7 @@ class AlanRunner:
             key: value for key, value in os.environ.items() if key.upper() in SAFE_ENVIRONMENT_VARIABLES
         }
         node_modules = _alan_node_modules(resolved_executable)
+        _ensure_engine_binary_alias(workspace, node_modules)
         if node_modules is not None:
             child_environment["NODE_PATH"] = str(node_modules)
         executable_paths = []
