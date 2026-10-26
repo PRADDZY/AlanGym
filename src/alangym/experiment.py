@@ -795,10 +795,11 @@ def _task_instruction(candidate: PullRequestCandidate, python: Path, skill: str)
     return (
         f"Fix this regression in the repository using only these source files:\n{allowed}\n\n"
         f"Task from merged PR #{candidate.number}: {candidate.title}\n\n{description}\n\n"
-        f"The regression command is {python.name} -m pytest -q {tests}. "
-        "You may read tests but must not edit tests, project files, or other repository files. "
-        "Make the smallest source fix, run the listed tests, and report the actual result.\n\n"
-        "Follow this Alan skill:\n" + skill
+        "Make the smallest source fix and report the change briefly.\n\n"
+        "Follow this Alan skill:\n" + skill +
+        f"\n\nHarness rule: the harness will run {python.name} -m pytest -q {tests} after you finish. "
+        "You may read tests, but do not run tests or edit tests, project files, or other repository files. "
+        "This rule overrides any conflicting test instruction in the skill."
     )
 
 
