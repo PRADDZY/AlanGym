@@ -75,6 +75,7 @@ class AlanRunner:
         workspace: Path,
         *,
         timeout: float = DEFAULT_TIMEOUT,
+        tool_path: Path | None = None,
     ) -> AgentResult:
         """Run a single bounded task without exposing unrelated environment secrets."""
         resolved_executable = shutil.which(self.executable)
@@ -98,6 +99,10 @@ class AlanRunner:
         child_environment = {
             key: value for key, value in os.environ.items() if key.upper() in SAFE_ENVIRONMENT_VARIABLES
         }
+        if tool_path is not None:
+            child_environment["PATH"] = os.pathsep.join(
+                (str(tool_path), child_environment.get("PATH", ""))
+            )
         child_environment.update(
             {
                 "ALAN_HARNESS_AUTO_ALLOW_EDITS": "1",
