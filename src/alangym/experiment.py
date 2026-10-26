@@ -328,6 +328,10 @@ class ExperimentManager:
             await _terminate_tree(process)
             await communication
             raise ExperimentBlocked("Installing the locked test environment exceeded 5 minutes.") from error
+        except asyncio.CancelledError:
+            await _terminate_tree(process)
+            await communication
+            raise
         output = output_bytes.decode("utf-8", errors="replace")
         if process.returncode != 0:
             raise ExperimentBlocked(
@@ -777,6 +781,10 @@ async def _run_process(command: list[str], cwd: Path, *, timeout: float) -> tupl
         await _terminate_tree(process)
         await communication
         return -1, "Command exceeded its time limit."
+    except asyncio.CancelledError:
+        await _terminate_tree(process)
+        await communication
+        raise
     return process.returncode or 0, output_bytes.decode("utf-8", errors="replace")
 
 

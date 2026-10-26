@@ -35,6 +35,8 @@ class CreateRunRequest(BaseModel):
             raise ValueError("Use a simple GitHub owner/name slug.")
         if owner in {".", ".."} or name in {".", ".."} or owner.startswith("-") or name.startswith("-"):
             raise ValueError("Repository names cannot be path segments or command flags.")
+        if value.casefold() != "mahmoud/boltons":
+            raise ValueError("This benchmark currently supports mahmoud/boltons.")
         return value
 
 

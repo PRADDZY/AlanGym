@@ -14,6 +14,7 @@ from .mining import PullRequestCandidate, parse_candidate, select_candidates
 
 REPOSITORY_SLUG = re.compile(r"^(?!-)[A-Za-z0-9_.-]+/(?!-)[A-Za-z0-9_.-]+$")
 PR_FIELDS = "number,title,body,mergedAt,mergeCommit,baseRefOid,files"
+DEMO_REPOSITORY = "mahmoud/boltons"
 
 
 class RepositoryError(RuntimeError):
@@ -26,6 +27,8 @@ class PublicGitHubRepository:
     def __init__(self, slug: str, cache_root: Path) -> None:
         if not REPOSITORY_SLUG.fullmatch(slug):
             raise ValueError("Repository must use a simple owner/name slug")
+        if slug.casefold() != DEMO_REPOSITORY:
+            raise ValueError(f"This benchmark currently supports only {DEMO_REPOSITORY}.")
         self.slug = slug
         owner, name = slug.split("/", maxsplit=1)
         if owner in {".", ".."} or name in {".", ".."}:

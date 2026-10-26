@@ -33,7 +33,7 @@ manual Alan steps.
 
 ## Demo benchmark
 
-The default demo repository is `mahmoud/boltons`. AlanGym reads public
+The supported demo repository is `mahmoud/boltons`. AlanGym reads public
 repository history through the authenticated GitHub CLI (`gh`), checks each
 candidate's first parent and complete changed-file list, and admits small PRs
 that change Python source and tests. It builds a frozen pytest environment,
@@ -134,6 +134,14 @@ container or WSL sandbox. Its subprocess environments omit common API and Git
 credentials, and task workspaces are temporary. This does not provide an OS
 security boundary: model tools and repository tests execute as the current
 Windows user, so use repositories you trust.
+
+## Import the skill into Alan
+
+After reviewing the measured version, open Alan's Skills area and choose
+Import, then From GitHub. Paste the link to
+`PRADDZY/AlanGym/blob/main/.agents/skills/alangym/SKILL.md`, review the imported
+skill, and add it to the team. AlanGym does not claim that it created an Alan
+skill version or configured an automation; those actions happen in Alan.
 
 ## Replay site
 

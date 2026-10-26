@@ -60,6 +60,8 @@ def test_api_rejects_invalid_slugs_and_missing_run_ids(tmp_path):
         async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
             invalid = await client.post("/api/runs", json={"repo": "../private/repo"})
             assert invalid.status_code == 422
+            unsupported = await client.post("/api/runs", json={"repo": "owner/other"})
+            assert unsupported.status_code == 422
             assert (await client.get("/api/runs/not-a-run")).status_code == 404
 
     asyncio.run(request_endpoints())

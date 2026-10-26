@@ -7,7 +7,6 @@ const ACTIVE_STATES = new Set<RunState>(["created", "mining", "validating", "bas
 function App() {
   const [detail, setDetail] = useState<RunDetail | null>(null);
   const [mode, setMode] = useState<ViewMode>("loading");
-  const [repo, setRepo] = useState("mahmoud/boltons");
   const [busy, setBusy] = useState(false);
   const [notice, setNotice] = useState("");
 
@@ -80,7 +79,7 @@ function App() {
       const response = await fetch("/api/runs", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ repo: repo.trim(), seed: 42 }),
+        body: JSON.stringify({ repo: "mahmoud/boltons", seed: 42 }),
       });
       const body = (await response.json()) as { run?: RunRecord; detail?: string };
       if (!response.ok || !body.run) throw new Error(body.detail ?? "Could not start this run.");
@@ -212,18 +211,16 @@ function App() {
           <footer className="footer"><span>ALANGYM <b>·</b> AN OPENFIRE EXPERIMENT</span><span>Scores come from repository tests. Unknown costs stay unreported.</span></footer>
         </>
       ) : (
-        <EmptyState mode={mode} repo={repo} setRepo={setRepo} busy={busy} notice={notice} onStart={handleStart} />
+        <EmptyState mode={mode} busy={busy} notice={notice} onStart={handleStart} />
       )}
     </main>
   );
 }
 
 function EmptyState({
-  mode, repo, setRepo, busy, notice, onStart,
+  mode, busy, notice, onStart,
 }: {
   mode: ViewMode;
-  repo: string;
-  setRepo: (value: string) => void;
   busy: boolean;
   notice: string;
   onStart: (event: FormEvent<HTMLFormElement>) => void;
@@ -241,10 +238,10 @@ function EmptyState({
           <h1>Skills should earn<br />their next line.</h1>
           <p>A real pull request becomes a repair task. Alan takes the first pass, repository tests keep score, and training failures decide what the skill learns.</p>
           <form className="start-form" onSubmit={onStart}>
-            <label htmlFor="repo">PUBLIC GITHUB REPOSITORY</label>
+            <label htmlFor="repo">DEMO REPOSITORY</label>
             <div className="repo-input-wrap">
               <GitHubIcon />
-              <input id="repo" value={repo} onChange={(event) => setRepo(event.target.value)} placeholder="owner/name" required pattern="[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+" disabled={mode !== "live" || busy} />
+              <input id="repo" value="mahmoud/boltons" readOnly aria-readonly="true" disabled={mode !== "live" || busy} />
               <button type="submit" disabled={mode !== "live" || busy}>{busy ? "STARTING…" : "START RUN"}<ArrowIcon /></button>
             </div>
             <div className="form-foot">
