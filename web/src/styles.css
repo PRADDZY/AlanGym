@@ -233,7 +233,6 @@ h1 { margin: 29px 0 15px; font-family: var(--serif); font-weight: 400; font-size
 .evidence-empty { padding: 20px 14px; border: 1px dashed #d3d9cc; color: #858f84; font-size: 10px; line-height: 1.65; }
 .ladder-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
 .ladder-actions { display: flex; align-items: center; justify-content: space-between; gap: 18px; padding: 13px 14px; border: 1px solid #dfe4d7; background: #f1f3e9; }
-.ladder-preview-note { margin: 0; padding: 8px 10px; border-left: 2px solid #db9b51; background: #fff7e8; color: #765c34; font-size: 9px; line-height: 1.5; }
 .ladder-actions > div { display: grid; gap: 6px; }
 .ladder-actions p { max-width: 720px; margin: 0; color: #7d897d; font-size: 9px; line-height: 1.55; }
 .ladder-actions button { flex: 0 0 auto; min-height: 38px; padding: 0 13px; border: 0; background: var(--ink); color: var(--lime); font: 8px var(--mono); letter-spacing: .05em; cursor: pointer; }
@@ -250,7 +249,6 @@ h1 { margin: 29px 0 15px; font-family: var(--serif); font-weight: 400; font-size
 .status-dot { width: 6px; height: 6px; border-radius: 50%; background: #adb5a7; }
 .status-dot.measured { background: #79a444; }
 .status-dot.partial { background: #db9b51; }
-.status-dot.preview { background: #db9b51; }
 .status-dot.unavailable { background: #a6ada2; }
 .ladder-card h3 { margin: 13px 0 5px; font: 400 18px var(--serif); }
 .ladder-card code { color: #899286; font: 8px var(--mono); overflow-wrap: anywhere; }

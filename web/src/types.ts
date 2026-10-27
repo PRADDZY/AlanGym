@@ -100,7 +100,7 @@ export interface AnalysisReport {
   benchmark: { repo: string; seed: number; training_count: number; heldout_count: number };
   training: Record<string, AnalysisScore>;
   heldout: Record<string, AnalysisScore>;
-  ladder: { configs: LadderConfig[]; task_ids: string[]; preview?: boolean };
+  ladder: { configs: LadderConfig[]; task_ids: string[] };
   heatmap: {
     phases: string[];
     tasks: Array<{
