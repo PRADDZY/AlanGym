@@ -242,7 +242,7 @@ function App() {
               {detail.tasks.length ? (
                 <div className="task-list">
                   {detail.tasks.map((task, index) => (
-                    <TaskRow key={task.id} task={task} trial={latestTrial(detail.trials, task.pr_number)} index={index} repo={detail.run.repo} />
+                    <TaskRow key={task.id} task={task} trial={latestTrial(detail.trials, task.pr_number, detail.skills.at(-1)?.version)} index={index} repo={detail.run.repo} />
                   ))}
                 </div>
               ) : (
@@ -580,7 +580,7 @@ function TaskRow({ task, trial, index, repo }: {
       <span className={"split-tag " + (task.split === "train" ? "train" : task.heldout_cohort === "retained_validation" ? "validation" : "fresh")}>{task.split === "train" ? "TRAIN" : task.heldout_cohort === "retained_validation" ? "VALIDATION" : "NEW HOLDOUT"}</span>
       <div className="task-copy">
         <a href={"https://github.com/" + repo + "/pull/" + task.pr_number} target="_blank" rel="noreferrer"><span>#{task.pr_number}</span> {task.title}<ArrowIcon /></a>
-        <small>{task.test_paths.join(" · ")}</small>
+        <small>{task.test_paths.join(" · ")}{trial ? ` · ${phaseLabel(trial.phase)}` : ""}</small>
       </div>
       <span className={"task-result " + status}><i />{trial ? (trial.passed === true ? "PASS" : trial.passed === false ? "FAIL" : trial.status.toUpperCase()) : "QUEUED"}</span>
     </div>
@@ -618,8 +618,13 @@ function Activity({ events }: { events: RunEvent[] }) {
   );
 }
 
-function latestTrial(trials: RunDetail["trials"], prNumber: number) {
-  return [...trials].reverse().find((trial) => trial.pr_number === prNumber);
+function latestTrial(trials: RunDetail["trials"], prNumber: number, skillVersion?: string) {
+  return [...trials].reverse().find((trial) =>
+    trial.pr_number === prNumber
+    && trial.phase !== "ladder"
+    && !trial.phase.endsWith("_ratchet_retry")
+    && (!skillVersion || trial.skill_version === skillVersion)
+  );
 }
 
 function stateLabel(state: RunState) {
