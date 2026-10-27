@@ -24,6 +24,14 @@ TRANSITIONS = {
     "failed": frozenset(),
     "cancelled": frozenset(),
 }
+ANALYSIS_TRANSITIONS = {
+    "queued": frozenset({"running", "blocked", "failed", "cancelled"}),
+    "running": frozenset({"running", "complete", "blocked", "failed", "cancelled"}),
+    "complete": frozenset(),
+    "blocked": frozenset(),
+    "failed": frozenset(),
+    "cancelled": frozenset(),
+}
 
 
 class ActiveRunError(RuntimeError):
@@ -106,8 +114,22 @@ class RunDatabase:
                     payload_json TEXT NOT NULL,
                     created_at TEXT NOT NULL
                 );
+                CREATE TABLE IF NOT EXISTS analysis_jobs (
+                    id TEXT PRIMARY KEY,
+                    run_id TEXT NOT NULL REFERENCES runs(id) ON DELETE CASCADE,
+                    kind TEXT NOT NULL,
+                    status TEXT NOT NULL,
+                    progress REAL NOT NULL DEFAULT 0 CHECK(progress >= 0 AND progress <= 1),
+                    message TEXT NOT NULL,
+                    config_json TEXT NOT NULL,
+                    result_json TEXT,
+                    error TEXT,
+                    created_at TEXT NOT NULL,
+                    updated_at TEXT NOT NULL
+                );
                 CREATE INDEX IF NOT EXISTS events_by_run ON events(run_id, sequence);
                 CREATE INDEX IF NOT EXISTS trials_by_run ON trials(run_id, phase);
+                CREATE INDEX IF NOT EXISTS analyses_by_run ON analysis_jobs(run_id, created_at);
                 """
             )
 
@@ -313,6 +335,91 @@ class RunDatabase:
             ).fetchall()
         return [dict(row) for row in rows]
 
+    def create_analysis_job(
+        self, run_id: str, kind: str, *, config: dict[str, Any] | None = None,
+    ) -> dict[str, Any]:
+        if not kind or not kind.strip():
+            raise ValueError("Analysis kind is required")
+        job_id = uuid.uuid4().hex
+        now = _now()
+        with self._connect() as connection:
+            connection.execute("BEGIN IMMEDIATE")
+            run = connection.execute("SELECT state FROM runs WHERE id = ?", (run_id,)).fetchone()
+            if run is None:
+                raise KeyError(f"unknown run {run_id}")
+            if run["state"] != "complete":
+                raise ValueError("Analysis requires a completed run")
+            active = connection.execute(
+                "SELECT id FROM analysis_jobs WHERE status IN ('queued', 'running') LIMIT 1"
+            ).fetchone()
+            if active is not None:
+                raise ValueError(f"Analysis {active['id']} is already active")
+            connection.execute(
+                """INSERT INTO analysis_jobs (
+                       id, run_id, kind, status, progress, message, config_json,
+                       result_json, error, created_at, updated_at
+                   ) VALUES (?, ?, ?, 'queued', 0, 'Queued', ?, NULL, NULL, ?, ?)""",
+                (job_id, run_id, kind.strip(), json.dumps(config or {}, sort_keys=True), now, now),
+            )
+        return self.get_analysis_job(job_id)
+
+    def get_analysis_job(self, job_id: str) -> dict[str, Any]:
+        with self._connect() as connection:
+            row = connection.execute(
+                "SELECT * FROM analysis_jobs WHERE id = ?", (job_id,)
+            ).fetchone()
+        if row is None:
+            raise KeyError(f"unknown analysis {job_id}")
+        return _analysis_row(row)
+
+    def list_analysis_jobs(self, run_id: str) -> list[dict[str, Any]]:
+        with self._connect() as connection:
+            rows = connection.execute(
+                "SELECT * FROM analysis_jobs WHERE run_id = ? ORDER BY created_at DESC",
+                (run_id,),
+            ).fetchall()
+        return [_analysis_row(row) for row in rows]
+
+    def update_analysis_job(
+        self,
+        job_id: str,
+        *,
+        status: str,
+        progress: float | None = None,
+        message: str | None = None,
+        result: dict[str, Any] | None = None,
+        error: str | None = None,
+    ) -> dict[str, Any]:
+        if status not in ANALYSIS_TRANSITIONS:
+            raise ValueError(f"Unknown analysis status {status!r}")
+        if progress is not None and not 0 <= progress <= 1:
+            raise ValueError("Analysis progress must be between zero and one")
+        with self._connect() as connection:
+            connection.execute("BEGIN IMMEDIATE")
+            current = connection.execute(
+                "SELECT status FROM analysis_jobs WHERE id = ?", (job_id,)
+            ).fetchone()
+            if current is None:
+                raise KeyError(f"unknown analysis {job_id}")
+            previous = current["status"]
+            if status not in ANALYSIS_TRANSITIONS[previous]:
+                raise ValueError(f"Cannot change terminal analysis {previous!r} to {status!r}")
+            connection.execute(
+                """UPDATE analysis_jobs SET status = ?, progress = COALESCE(?, progress),
+                       message = COALESCE(?, message), result_json = COALESCE(?, result_json),
+                       error = ?, updated_at = ? WHERE id = ?""",
+                (
+                    status,
+                    progress,
+                    message,
+                    json.dumps(result, sort_keys=True, ensure_ascii=False) if result is not None else None,
+                    error,
+                    _now(),
+                    job_id,
+                ),
+            )
+        return self.get_analysis_job(job_id)
+
     @staticmethod
     def _insert_event(
         connection: sqlite3.Connection,
@@ -329,3 +436,10 @@ class RunDatabase:
 
 def _now() -> str:
     return datetime.now(timezone.utc).isoformat(timespec="seconds")
+
+
+def _analysis_row(row: sqlite3.Row) -> dict[str, Any]:
+    return dict(row) | {
+        "config": json.loads(row["config_json"]),
+        "result": json.loads(row["result_json"]) if row["result_json"] else None,
+    }
