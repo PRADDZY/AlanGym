@@ -34,9 +34,9 @@ function App() {
             .filter((task) => task.split === "heldout")
             .map((task) => task.task_id) ?? [];
           const demoConfigs = [
-            { id: "flash_no_skill", label: "DeepSeek V4.1 Flash", model: "deepseek/deepseek-v4.1-flash", skill_mode: "none", status: "preview", reason: null, passed: 2, total: 4, rate: 0.5, tokens_input: null, tokens_output: null, cost_usd: null, cost_per_pass: null, cost_verified: false },
-            { id: "flash_current_skill", label: "Flash with current skill", model: "deepseek/deepseek-v4.1-flash", skill_mode: "current", status: "preview", reason: null, passed: 3, total: 4, rate: 0.75, tokens_input: null, tokens_output: null, cost_usd: null, cost_per_pass: null, cost_verified: false },
-            { id: "deepseek_pro_no_skill", label: "DeepSeek V4 Pro", model: "deepseek/deepseek-v4-pro", skill_mode: "none", status: "preview", reason: null, passed: 2, total: 4, rate: 0.5, tokens_input: null, tokens_output: null, cost_usd: null, cost_per_pass: null, cost_verified: false },
+            { id: "flash_no_skill", label: "DeepSeek V4.1 Flash", model: "deepseek/deepseek-v4.1-flash", skill_mode: "none", status: "preview", reason: null, passed: 2, total: 4, rate: 0.5, tokens_input: 128400, tokens_output: 18200, cost_usd: 0.0184, cost_per_pass: null, cost_verified: false },
+            { id: "flash_current_skill", label: "Flash with current skill", model: "deepseek/deepseek-v4.1-flash", skill_mode: "current", status: "preview", reason: null, passed: 3, total: 4, rate: 0.75, tokens_input: 140500, tokens_output: 20100, cost_usd: 0.0216, cost_per_pass: null, cost_verified: false },
+            { id: "deepseek_pro_no_skill", label: "DeepSeek V4 Pro", model: "deepseek/deepseek-v4-pro", skill_mode: "none", status: "preview", reason: null, passed: 2, total: 4, rate: 0.5, tokens_input: 152900, tokens_output: 22600, cost_usd: 0.0648, cost_per_pass: null, cost_verified: false },
           ];
           const preview: RunDetail = {
             ...saved,
@@ -442,7 +442,7 @@ function ModelLadder({ report, isReplay, canRun, job, busy, notice, onRun }: {
 }) {
   const active = job && ["queued", "running"].includes(job.status);
   return <div className="feature-view">
-    {report.ladder.preview && <p className="ladder-preview-note">Illustrative fixture scores for the recording preview; these are not measured model results.</p>}
+    {report.ladder.preview && <p className="ladder-preview-note">Illustrative fixture values for this recording preview: scores and token counts are not measured, and dollar costs are not billing-verified.</p>}
     <div className="ladder-actions">
       <div><span className="evidence-label">THREE CONFIGURATIONS · {report.benchmark.heldout_count * 3} TASK RUNS</span><p>Starts Alan using the configured Flash and V4 Pro models. It never purchases credits; dollar costs remain hidden unless verified.</p></div>
       {!isReplay && <button onClick={onRun} disabled={busy || Boolean(active) || !canRun}>{busy ? "STARTING…" : active ? "LADDER RUNNING" : "RUN MODEL LADDER"}</button>}
@@ -457,7 +457,7 @@ function ModelLadder({ report, isReplay, canRun, job, busy, notice, onRun }: {
       <p>{config.reason ?? (config.rate === null ? "Some trials have no pass result." : `${Math.round(config.rate * 100)}% held-out pass rate`)}</p>
       <div className="ladder-meta">
         <span>TOKENS <b>{formatTokenPair(config.tokens_input, config.tokens_output)}</b></span>
-        <span>COST <b>{config.cost_usd === null ? "unverified" : `$${config.cost_usd.toFixed(4)}`}</b></span>
+        <span>COST <b>{config.cost_usd === null || (!report.ladder.preview && !config.cost_verified) ? "unverified" : `$${config.cost_usd.toFixed(4)}`}</b></span>
       </div>
     </article>
     ))}</div>
