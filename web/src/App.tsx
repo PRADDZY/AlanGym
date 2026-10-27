@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState, type FormEvent } from "react";
-import type { RunDetail, RunEvent, RunRecord, RunState } from "./types";
+import type { AnalysisJob, AnalysisReport, RunDetail, RunEvent, RunRecord, RunState } from "./types";
 
 type ViewMode = "loading" | "live" | "replay" | "offline";
 const ACTIVE_STATES = new Set<RunState>(["created", "mining", "validating", "baseline", "training", "evolving", "evaluating"]);
@@ -9,6 +9,8 @@ function App() {
   const [mode, setMode] = useState<ViewMode>("loading");
   const [busy, setBusy] = useState(false);
   const [notice, setNotice] = useState("");
+  const [analysisJob, setAnalysisJob] = useState<AnalysisJob | null>(null);
+  const [analysisBusy, setAnalysisBusy] = useState(false);
 
   const refresh = useCallback(async (runId: string) => {
     const response = await fetch("/api/runs/" + encodeURIComponent(runId));
@@ -71,6 +73,39 @@ function App() {
     };
   }, [detail?.run.id, detail?.run.state, mode, refresh]);
 
+  useEffect(() => {
+    if (mode !== "live" || !detail || detail.run.state !== "complete") return;
+    let alive = true;
+    void fetch("/api/runs/" + encodeURIComponent(detail.run.id) + "/analyses")
+      .then(async (response) => response.ok ? await response.json() as { analyses: AnalysisJob[] } : null)
+      .then((body) => {
+        if (!alive || !body) return;
+        const latest = body.analyses.find((job) => job.kind === "ladder");
+        if (latest) setAnalysisJob(latest);
+      }).catch(() => undefined);
+    return () => { alive = false; };
+  }, [detail?.run.id, detail?.run.state, mode]);
+
+  useEffect(() => {
+    setAnalysisJob(null);
+  }, [detail?.run.id]);
+
+  useEffect(() => {
+    if (!analysisJob || !["queued", "running"].includes(analysisJob.status)) return;
+    const poll = window.setInterval(() => {
+      void fetch("/api/analyses/" + encodeURIComponent(analysisJob.id))
+        .then(async (response) => response.ok ? await response.json() as { analysis: AnalysisJob } : null)
+        .then((body) => {
+          if (!body) return;
+          setAnalysisJob(body.analysis);
+          if (["complete", "blocked", "failed", "cancelled"].includes(body.analysis.status)) {
+            if (detail) void refresh(detail.run.id).catch(() => undefined);
+          }
+        }).catch(() => undefined);
+    }, 1_200);
+    return () => window.clearInterval(poll);
+  }, [analysisJob, detail, refresh]);
+
   const handleStart = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setBusy(true);
@@ -101,6 +136,26 @@ function App() {
       setNotice("The local API did not confirm cancellation.");
     } finally {
       setBusy(false);
+    }
+  };
+
+  const handleRunLadder = async () => {
+    if (!detail) return;
+    setAnalysisBusy(true);
+    setNotice("");
+    try {
+      const response = await fetch(`/api/runs/${encodeURIComponent(detail.run.id)}/analyses`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ kind: "ladder" }),
+      });
+      const body = await response.json() as { analysis?: AnalysisJob; detail?: string };
+      if (!response.ok || !body.analysis) throw new Error(body.detail ?? "Could not start the model ladder.");
+      setAnalysisJob(body.analysis);
+    } catch (error) {
+      setNotice(error instanceof Error ? error.message : "Could not start the model ladder.");
+    } finally {
+      setAnalysisBusy(false);
     }
   };
 
@@ -135,7 +190,7 @@ function App() {
               <div className="hero-kicker"><span className="kicker-mark">01</span><span>THE EXPERIMENT</span></div>
               <h1>Skills should earn<br />their next line.</h1>
               <p>AlanGym turns merged pull requests into real repair tasks. Alan solves them, repository tests grade the work, and only training failures can shape the skill.</p>
-              <div className="hero-foot"><span className="hero-rule" /><span>DeepSeek V4.1 Flash</span><i>·</i><span>two bounded rounds</span></div>
+              <div className="hero-foot"><span className="hero-rule" /><span>{detail.run.model}</span><i>·</i><span>two bounded rounds</span></div>
             </div>
             <div className="hero-chart">
               <div className="chart-head">
@@ -146,8 +201,8 @@ function App() {
               </div>
               <PassRateChart training={trainingMetrics} heldout={heldoutMetrics} />
               <div className="chart-legend">
-                <span><i className="legend-training" />training · 6 tasks</span>
-                <span><i className="legend-heldout" />held-out · 4 tasks</span>
+                <span><i className="legend-training" />training · {detail.run.training_count} tasks</span>
+                <span><i className="legend-heldout" />held-out · {detail.run.heldout_count} tasks</span>
                 <span className="chart-note">held-out tested at start and finish</span>
               </div>
             </div>
@@ -162,9 +217,9 @@ function App() {
               <span className="run-meta">started {formatDate(detail.run.created_at)} <b>·</b> seed {detail.run.seed}</span>
             </div>
             <div className="run-measures">
-              <ScoreReadout label="TRAINING" metric={trainingMetrics.at(-1)} planned={6} />
+              <ScoreReadout label="TRAINING" metric={trainingMetrics.at(-1)} planned={detail.run.training_count} />
               <span className="measure-divider" />
-              <ScoreReadout label="HELD-OUT" metric={heldoutMetrics.find((event) => event.payload?.label === "final") ?? heldoutMetrics[0]} planned={4} />
+              <ScoreReadout label="HELD-OUT" metric={heldoutMetrics.find((event) => event.payload?.label === "final") ?? heldoutMetrics[0]} planned={detail.run.heldout_count} />
               <span className="measure-divider" />
               <div className="measure"><span className="measure-label">SKILL VERSION</span><strong className="measure-version">{detail.skills.at(-1)?.version ?? "pending"}</strong></div>
             </div>
@@ -208,6 +263,7 @@ function App() {
               </section>
             </aside>
           </div>
+          {detail.analysis_report && <EvidenceLab report={detail.analysis_report} detail={detail} isReplay={isReplay} analysisJob={analysisJob} analysisBusy={analysisBusy} notice={notice} onRunLadder={handleRunLadder} />}
           <footer className="footer"><span>ALANGYM <b>·</b> AN OPENFIRE EXPERIMENT</span><span>Scores come from repository tests. Unknown costs stay unreported.</span></footer>
         </>
       ) : (
@@ -245,7 +301,7 @@ function EmptyState({
               <button type="submit" disabled={mode !== "live" || busy}>{busy ? "STARTING…" : "START RUN"}<ArrowIcon /></button>
             </div>
             <div className="form-foot">
-              <span>10 verified tasks · 6 train · 4 held out · 2 rounds</span>
+              <span>14 verified tasks · 6 train · 8 held out · 2 rounds</span>
               {mode === "live" && <span className="api-ready"><i />LOCAL API READY</span>}
             </div>
             {notice && <p className="form-notice" role="alert">{notice}</p>}
@@ -262,6 +318,195 @@ function EmptyState({
       <footer className="footer"><span>ALANGYM <b>·</b> AN OPENFIRE EXPERIMENT</span><span>One model. One skill. A test suite that decides.</span></footer>
     </>
   );
+}
+
+type EvidenceTab = "heatmap" | "xray" | "ladder" | "lineage" | "battle";
+
+function EvidenceLab({
+  report, detail, isReplay, analysisJob, analysisBusy, notice, onRunLadder,
+}: {
+  report: AnalysisReport;
+  detail: RunDetail;
+  isReplay: boolean;
+  analysisJob: AnalysisJob | null;
+  analysisBusy: boolean;
+  notice: string;
+  onRunLadder: () => void;
+}) {
+  const [tab, setTab] = useState<EvidenceTab>("heatmap");
+  const phases = report.heatmap.phases;
+  const [phaseIndex, setPhaseIndex] = useState(Math.max(0, phases.length - 1));
+  const phase = phases[phaseIndex] ?? "baseline";
+  const tabs: Array<[EvidenceTab, string]> = [
+    ["heatmap", "TASK SCRUBBER"],
+    ["xray", "X-RAY"],
+    ["ladder", "MODEL LADDER"],
+    ["lineage", "SKILL LINEAGE"],
+    ["battle", "BATTLE / FORK"],
+  ];
+
+  return (
+    <section className="evidence-lab panel">
+      <div className="evidence-heading">
+        <div><span className="section-index">05 / EVIDENCE LAB</span><h2>Every claim points to saved evidence.</h2></div>
+        <span className="evidence-run">{report.coverage.task_count} TASKS Â· {report.coverage.trial_count} TRIALS</span>
+      </div>
+      <div className="evidence-tabs" role="tablist" aria-label="Experiment evidence">
+        {tabs.map(([key, label]) => (
+          <button key={key} role="tab" aria-selected={tab === key} className={tab === key ? "active" : ""} onClick={() => setTab(key)}>{label}</button>
+        ))}
+      </div>
+      <div className="evidence-content">
+        {tab === "heatmap" && (
+          <>
+            <div className="scrubber-head">
+              <div><span className="evidence-label">SELECTED PHASE</span><strong>{phaseLabel(phase)}</strong></div>
+              {phases.length > 1 && <label className="scrubber-control" htmlFor="phase-scrubber">
+                <span>{String(phaseIndex + 1).padStart(2, "0")} / {String(phases.length).padStart(2, "0")}</span>
+                <input id="phase-scrubber" type="range" min={0} max={phases.length - 1} value={phaseIndex} onChange={(event) => setPhaseIndex(Number(event.target.value))} />
+              </label>}
+            </div>
+            <div className="heatmap-grid" role="table" aria-label="Task outcomes by run phase">
+              <div className="heatmap-row heatmap-header" role="row"><span role="columnheader">TASK</span><span role="columnheader">SPLIT</span><span role="columnheader">OUTCOME</span></div>
+              {report.heatmap.tasks.map((task) => {
+                const passed = task.outcomes[phase];
+                return <div className="heatmap-row" role="row" key={task.task_id}>
+                  <span className="heatmap-task" role="cell">PR #{task.pr_number}</span>
+                  <span className={"split-tag " + (task.split === "train" ? "train" : task.heldout_cohort === "retained_validation" ? "validation" : "fresh")} role="cell">{task.split === "train" ? "TRAIN" : task.heldout_cohort === "retained_validation" ? "VALIDATION" : "NEW HOLDOUT"}</span>
+                  <span className={"heat-cell " + (passed === true ? "pass" : passed === false ? "fail" : "unknown")} role="cell">{passed === true ? "PASS" : passed === false ? "FAIL" : "NO RESULT"}</span>
+                </div>;
+              })}
+              {report.heatmap.tasks.length === 0 && <div className="evidence-empty">Tasks appear after the benchmark split is saved.</div>}
+            </div>
+            <p className="evidence-note">Scrub phases to inspect the saved result for each task. Hatched or missing results are never counted as passes.</p>
+          </>
+        )}
+        {tab === "xray" && <TaskXray report={report} />}
+        {tab === "ladder" && <ModelLadder report={report} isReplay={isReplay} canRun={detail.run.state === "complete" && !isReplay} job={analysisJob} busy={analysisBusy} notice={notice} onRun={onRunLadder} />}
+        {tab === "lineage" && <SkillLineage report={report} />}
+        {tab === "battle" && <BattleFork detail={detail} report={report} />}
+      </div>
+    </section>
+  );
+}
+
+function TaskXray({ report }: { report: AnalysisReport }) {
+  const xray = report.xray;
+  return <div className="feature-view">
+    <div className="feature-intro"><span className="evidence-label">{xray.mode === "task_level" ? "TASK-LEVEL COMPARISON" : "STEP-LEVEL COUNTERFACTUAL"}</span>
+      <strong>{xray.status === "measured" ? `${xray.changed_tasks ?? 0} / ${xray.total_tasks ?? 0} task outcomes changed` : "No paired X-ray evidence"}</strong>
+      <p>{xray.reason ?? "Exact next-action probes are not saved for this run."}</p>
+    </div>
+    {xray.outcomes?.length ? <div className="xray-list">{xray.outcomes.map((item) => (
+      <div className="xray-row" key={item.task_id}><span>{item.task_id.toUpperCase()}</span><span className={item.baseline_passed ? "pass-text" : "fail-text"}>{(xray.left_label ?? "BASELINE").toUpperCase()} {item.baseline_passed ? "PASS" : "FAIL"}</span><ArrowIcon /><span className={item.final_passed ? "pass-text" : "fail-text"}>{(xray.right_label ?? "FINAL").toUpperCase()} {item.final_passed ? "PASS" : "FAIL"}</span><b>{item.changed ? "CHANGED" : "SAME"}</b></div>
+    ))}</div> : <div className="evidence-empty">Exact per-step probes need saved message prefixes. This report does not guess which skill line caused a task result.</div>}
+  </div>;
+}
+
+function ModelLadder({ report, isReplay, canRun, job, busy, notice, onRun }: {
+  report: AnalysisReport;
+  isReplay: boolean;
+  canRun: boolean;
+  job: AnalysisJob | null;
+  busy: boolean;
+  notice: string;
+  onRun: () => void;
+}) {
+  const active = job && ["queued", "running"].includes(job.status);
+  return <div className="feature-view">
+    <div className="ladder-actions">
+      <div><span className="evidence-label">THREE CONFIGURATIONS · {report.benchmark.heldout_count * 3} TASK RUNS</span><p>Starts Alan using the configured Flash and V4 Pro models. It never purchases credits; dollar costs remain hidden unless verified.</p></div>
+      {!isReplay && <button onClick={onRun} disabled={busy || Boolean(active) || !canRun}>{busy ? "STARTING…" : active ? "LADDER RUNNING" : "RUN MODEL LADDER"}</button>}
+    </div>
+    {job && <div className={`analysis-progress ${job.status}`}><span>{job.status.toUpperCase()}</span><p>{job.message}</p>{active && <progress value={job.progress} max={1} />}</div>}
+    {notice && <p className="form-notice" role="alert">{notice}</p>}
+    <div className="ladder-grid">{report.ladder.configs.map((config) => (
+    <article className="ladder-card" key={config.id}>
+      <div className="ladder-status"><span className={"status-dot " + config.status} />{config.status.toUpperCase()}</div>
+      <h3>{config.label}</h3><code>{config.model}</code>
+      <strong className="ladder-score">{config.passed === null ? "—" : config.passed} <small>/ {config.total}</small></strong>
+      <p>{config.reason ?? (config.rate === null ? "Some trials have no pass result." : `${Math.round(config.rate * 100)}% held-out pass rate`)}</p>
+      <div className="ladder-meta">
+        <span>TOKENS <b>{formatTokenPair(config.tokens_input, config.tokens_output)}</b></span>
+        <span>COST <b>{config.cost_usd === null ? "unverified" : `$${config.cost_usd.toFixed(4)}`}</b></span>
+      </div>
+    </article>
+    ))}</div>
+  </div>;
+}
+
+function SkillLineage({ report }: { report: AnalysisReport }) {
+  const provenance = report.provenance;
+  return <div className="lineage-view">
+    <div className="feature-intro"><span className="evidence-label">VERSION PROVENANCE · {provenance.status.replaceAll("_", " ").toUpperCase()}</span>
+      <strong>{provenance.version ?? "No skill version saved"}</strong>
+      <p>{provenance.source_pr_numbers.length ? `Version-level training sources: ${provenance.source_pr_numbers.map((number) => `#${number}`).join(", ")}. Individual line origins remain unattributed.` : "No accepted training edit has source PR attribution."}</p>
+    </div>
+    {provenance.lines.length > 0 && <pre className="skill-lines">{provenance.lines.map((line) => <span key={line.line}><i>{String(line.line).padStart(2, "0")}</i><code>{line.text || " "}</code><b>{line.origin === "initial" ? "STARTER" : "UNATTRIBUTED"}</b></span>)}</pre>}
+    <div className="lineage-list">{report.lineage.map((node, index) => (
+      <article className={"lineage-node " + (node.accepted ? "accepted" : "rejected")} key={`${node.version}-${index}`}>
+        <span>{node.accepted ? "ACCEPTED" : "REJECTED"}</span><strong>{node.version ?? "candidate"}</strong>
+        <small>{node.parent_version ? `from ${node.parent_version}` : "root version"} Â· {node.training_passes ?? "?"} training passes</small>
+        {node.reason && <small>reason: {node.reason.replaceAll("_", " ")}</small>}
+        {node.source_pr_numbers.length > 0 && <small>version sources {node.source_pr_numbers.map((number) => `#${number}`).join(", ")}</small>}
+        {node.flipped_pr_numbers.length > 0 && <small>flipped {node.flipped_pr_numbers.map((number) => `#${number}`).join(", ")}{node.flaky_pr_numbers.length ? ` · flaky retry ${node.flaky_pr_numbers.map((number) => `#${number}`).join(", ")}` : ""}</small>}
+      </article>
+    ))}</div>
+    {report.lineage.length === 0 && <div className="evidence-empty">The starter skill remains frozen until a candidate improves training without regressing prior passes.</div>}
+  </div>;
+}
+
+function BattleFork({ detail, report }: { detail: RunDetail; report: AnalysisReport }) {
+  const [selectedPr, setSelectedPr] = useState<number | null>(null);
+  const pairs = useMemo(() => {
+    const grouped = new Map<number, { without?: RunDetail["trials"][number]; with?: RunDetail["trials"][number] }>();
+    for (const trial of detail.trials) {
+      if (trial.config_id !== "flash_no_skill" && trial.config_id !== "flash_current_skill") continue;
+      const pair = grouped.get(trial.pr_number) ?? {};
+      if (trial.config_id === "flash_no_skill") pair.without = trial;
+      else pair.with = trial;
+      grouped.set(trial.pr_number, pair);
+    }
+    return [...grouped.entries()].filter((entry): entry is [number, { without: RunDetail["trials"][number]; with: RunDetail["trials"][number] }] => Boolean(entry[1].without && entry[1].with));
+  }, [detail.trials]);
+  const pair = pairs.find(([pr]) => pr === selectedPr)?.[1] ?? pairs[0]?.[1];
+  const withoutSteps = pair?.without.steps ?? [];
+  const withSteps = pair?.with.steps ?? [];
+  const longest = Math.max(withoutSteps.length, withSteps.length);
+  const divergence = Array.from({ length: longest }).findIndex((_, index) => {
+    const left = withoutSteps[index], right = withSteps[index];
+    return !left || !right || left.kind !== right.kind || left.tool !== right.tool;
+  });
+  return <div className="battle-view">
+    <div className="feature-intro"><span className="evidence-label">CONTROLLED A / B</span>
+      <strong>{pairs.length ? "Same model · same task · skill is the variable" : "No matched ladder pair saved"}</strong>
+      <p>{pairs.length ? String(report.battle.reason ?? "Only action labels are replayed here; private prompts, arguments, and tool output remain local.") : String(report.battle.reason ?? "The battle replay becomes available when both Flash configurations have saved trials for the same held-out PR.")}</p>
+    </div>
+    {pairs.length > 0 && pair && <>
+      <label className="battle-select">TASK <select value={selectedPr ?? pairs[0][0]} onChange={(event) => setSelectedPr(Number(event.target.value))}>{pairs.map(([pr]) => <option key={pr} value={pr}>PR #{pr}</option>)}</select></label>
+      <div className="battle-panes">{[
+        { title: "FLASH · NO SKILL", trial: pair.without, steps: withoutSteps },
+        { title: "FLASH · CURRENT SKILL", trial: pair.with, steps: withSteps },
+      ].map((pane) => <div className="battle-pane" key={pane.title}>
+        <header><span>{pane.title}</span><b className={pane.trial.passed ? "pass-text" : "fail-text"}>{pane.trial.passed ? "PASS" : pane.trial.passed === false ? "FAIL" : "UNKNOWN"}</b></header>
+        <ol>{Array.from({ length: Math.max(1, longest) }, (_, index) => {
+          const step = pane.steps[index];
+          return <li className={index === divergence ? "divergence" : ""} key={index}><i>{String(index + 1).padStart(2, "0")}</i><code>{step ? step.kind === "tool" ? step.tool ?? "tool" : "assistant response" : "no recorded step"}</code><b>{index === divergence ? "FIRST VISIBLE CHANGE" : ""}</b></li>;
+        })}</ol>
+      </div>)}</div>
+      {divergence >= 0 && <p className="evidence-note">First visible difference is step {divergence + 1}. Tool labels are not proof of a specific skill line causing the outcome.</p>}
+    </>}
+    <div className="fork-status"><span className="evidence-label">TIME-TRAVEL FORK · {String(report.fork.status ?? "unavailable").toUpperCase()}</span><p>{String(report.fork.reason ?? "Exact conversation and workspace restoration evidence is not saved; no fork is offered.")}</p></div>
+  </div>;
+}
+
+function phaseLabel(phase: string) {
+  return phase.replaceAll("_", " ").replace(/\b\w/g, (letter) => letter.toUpperCase());
+}
+
+function formatTokenPair(input: number | null, output: number | null) {
+  if (input === null || output === null) return "unavailable";
+  return `${(input + output).toLocaleString()} (${input.toLocaleString()} in · ${output.toLocaleString()} out)`;
 }
 
 function PassRateChart({ training, heldout }: { training: RunEvent[]; heldout: RunEvent[] }) {
@@ -321,7 +566,7 @@ function TaskRow({ task, trial, index, repo }: {
   return (
     <div className="task-row">
       <span className="task-number">{String(index + 1).padStart(2, "0")}</span>
-      <span className={"split-tag " + task.split}>{task.split === "train" ? "TRAIN" : "HELD OUT"}</span>
+      <span className={"split-tag " + (task.split === "train" ? "train" : task.heldout_cohort === "retained_validation" ? "validation" : "fresh")}>{task.split === "train" ? "TRAIN" : task.heldout_cohort === "retained_validation" ? "VALIDATION" : "NEW HOLDOUT"}</span>
       <div className="task-copy">
         <a href={"https://github.com/" + repo + "/pull/" + task.pr_number} target="_blank" rel="noreferrer"><span>#{task.pr_number}</span> {task.title}<ArrowIcon /></a>
         <small>{task.test_paths.join(" · ")}</small>

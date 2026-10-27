@@ -6,15 +6,17 @@ import asyncio
 import json
 from contextlib import asynccontextmanager
 from pathlib import Path
-from typing import Any
+from typing import Any, Literal
 
 from fastapi import FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import StreamingResponse
 from pydantic import BaseModel, Field, field_validator
 
+from .analysis_report import build_analysis_report
 from .database import ActiveRunError, RunDatabase
 from .experiment import ExperimentManager
+from .replay import _public_steps, _public_trace, _scrub, _scrub_value
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
@@ -40,12 +42,18 @@ class CreateRunRequest(BaseModel):
         return value
 
 
+class CreateAnalysisRequest(BaseModel):
+    kind: Literal["suite", "ladder", "ratchet", "xray", "compiler", "twins", "battle", "fork"] = "suite"
+    config: dict[str, Any] = Field(default_factory=dict)
+
+
 def create_app(
     *,
     database_path: Path | None = None,
     project_root: Path = PROJECT_ROOT,
     data_root: Path | None = None,
     manager: ExperimentManager | None = None,
+    analysis_manager: Any | None = None,
 ) -> FastAPI:
     root = project_root.resolve()
     resolved_data_root = (data_root or root / ".alangym").resolve()
@@ -53,11 +61,19 @@ def create_app(
     run_manager = manager or ExperimentManager(
         database, project_root=root, data_root=resolved_data_root
     )
+    if analysis_manager is None:
+        from .analysis_service import AnalysisManager
+
+        analysis_runner = AnalysisManager(database, project_root=root, data_root=resolved_data_root)
+    else:
+        analysis_runner = analysis_manager
 
     @asynccontextmanager
     async def lifespan(_: FastAPI):
         run_manager.recover_interrupted_runs()
+        analysis_runner.recover_interrupted_analyses()
         yield
+        await analysis_runner.shutdown()
         await run_manager.shutdown()
 
     app = FastAPI(title="AlanGym", version="0.1.0", lifespan=lifespan)
@@ -101,6 +117,39 @@ def create_app(
         cancelled = await run_manager.cancel(run_id)
         return {"cancelled": cancelled}
 
+    @app.post("/api/runs/{run_id}/analyses", status_code=202)
+    async def create_analysis(run_id: str, request: CreateAnalysisRequest) -> dict[str, Any]:
+        try:
+            analysis = analysis_runner.start(run_id, request.kind, config=request.config)
+        except KeyError as error:
+            raise HTTPException(status_code=404, detail="Run not found.") from error
+        except ValueError as error:
+            raise HTTPException(status_code=409, detail=str(error)) from error
+        return {"analysis": analysis}
+
+    @app.get("/api/runs/{run_id}/analyses")
+    async def list_analyses(run_id: str) -> dict[str, Any]:
+        try:
+            database.get_run(run_id)
+        except KeyError as error:
+            raise HTTPException(status_code=404, detail="Run not found.") from error
+        return {"analyses": database.list_analysis_jobs(run_id)}
+
+    @app.get("/api/analyses/{analysis_id}")
+    async def get_analysis(analysis_id: str) -> dict[str, Any]:
+        try:
+            return {"analysis": database.get_analysis_job(analysis_id)}
+        except KeyError as error:
+            raise HTTPException(status_code=404, detail="Analysis not found.") from error
+
+    @app.post("/api/analyses/{analysis_id}/cancel")
+    async def cancel_analysis(analysis_id: str) -> dict[str, Any]:
+        try:
+            database.get_analysis_job(analysis_id)
+        except KeyError as error:
+            raise HTTPException(status_code=404, detail="Analysis not found.") from error
+        return {"cancelled": await analysis_runner.cancel(analysis_id)}
+
     @app.get("/api/runs/{run_id}/events")
     async def stream_events(
         run_id: str,
@@ -141,16 +190,43 @@ def _run_detail(database: RunDatabase, run_id: str) -> dict[str, Any]:
         run = database.get_run(run_id)
     except KeyError as error:
         raise HTTPException(status_code=404, detail="Run not found.") from error
-    return {
-        "run": run,
-        "tasks": database.list_tasks(run_id),
-        "trials": database.list_trials(run_id),
-        "skills": database.list_skill_versions(run_id),
-        "events": [
+    events = []
+    for event in database.list_events(run_id, limit=1_000):
+        payload = json.loads(event.pop("payload_json"))
+        payload.pop("proposal_trace", None)
+        events.append(
             {
                 **event,
-                "payload": json.loads(event.pop("payload_json")),
+                "message": _scrub(event["message"]),
+                "payload": _scrub_value(payload),
             }
-            for event in database.list_events(run_id, limit=1_000)
-        ],
+        )
+    skills = [
+        {**skill, "content": _scrub(str(skill.get("content", "")))}
+        for skill in database.list_skill_versions(run_id)
+    ]
+    detail = {
+        "run": run,
+        "tasks": database.list_tasks(run_id),
+        "trials": [_api_trial(trial) for trial in database.list_trials(run_id)],
+        "skills": skills,
+        "events": events,
     }
+    detail["analysis_report"] = build_analysis_report(detail)
+    return detail
+
+
+def _api_trial(trial: dict[str, Any]) -> dict[str, Any]:
+    safe = {
+        key: trial.get(key)
+        for key in (
+            "id", "task_id", "pr_number", "phase", "skill_version", "status", "passed",
+            "elapsed_seconds", "model", "actual_model", "tokens_input", "tokens_output",
+            "tokens_reasoning", "config_id", "skill_mode",
+        )
+    }
+    safe["cost_verified"] = trial.get("cost_verified") is True
+    safe["cost_usd"] = trial.get("cost_usd") if safe["cost_verified"] else None
+    safe["trace"] = _public_trace(trial.get("trace", ""))
+    safe["steps"] = _public_steps(trial.get("engine_history"))
+    return safe

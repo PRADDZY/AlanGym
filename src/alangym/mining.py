@@ -163,6 +163,36 @@ def split_tasks(
     return shuffled[:train_count], shuffled[train_count:]
 
 
+def build_benchmark_split(
+    fresh_candidates: Iterable[PullRequestCandidate],
+    retained_validation: Iterable[PullRequestCandidate],
+    *,
+    seed: int = 42,
+    train_count: int = 6,
+    new_heldout_count: int = 4,
+) -> tuple[list[PullRequestCandidate], list[PullRequestCandidate], list[PullRequestCandidate]]:
+    """Keep four prior validation tasks and add a disjoint fresh 6/4 cohort."""
+    validation = list(retained_validation)
+    if len(validation) != 4 or len({item.number for item in validation}) != 4:
+        raise ValueError("The retained validation cohort must contain four unique tasks")
+    validation_sources: set[str] = set()
+    for task in validation:
+        if task.source_paths & validation_sources:
+            raise ValueError("Retained validation tasks must have distinct source files")
+        validation_sources.update(task.source_paths)
+
+    validation_numbers = {item.number for item in validation}
+    eligible = [
+        item
+        for item in fresh_candidates
+        if item.number not in validation_numbers
+        and not item.source_paths.intersection(validation_sources)
+    ]
+    fresh = select_candidates(eligible, count=train_count + new_heldout_count)
+    training, new_heldout = split_tasks(fresh, train_count=train_count, seed=seed)
+    return training, validation, new_heldout
+
+
 def _has_prefix(path: str, prefixes: tuple[str, ...]) -> bool:
     return any(path.startswith(prefix) for prefix in prefixes)
 

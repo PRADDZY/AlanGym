@@ -7,6 +7,7 @@ import re
 from pathlib import Path
 from typing import Any
 
+from .analysis_report import build_analysis_report
 from .database import RunDatabase
 
 
@@ -41,9 +42,11 @@ def export_replay(database: RunDatabase, run_id: str, destination: Path) -> Path
             "updated_at",
         )
     }
+    # Run-level billing is not verified in the current data model.
+    public_run["cost_usd"] = None
     tasks = [
         {
-            key: task[key]
+            key: task.get(key)
             for key in (
                 "id",
                 "pr_number",
@@ -55,38 +58,37 @@ def export_replay(database: RunDatabase, run_id: str, destination: Path) -> Path
                 "test_paths",
                 "fixture_paths",
                 "split",
+                "heldout_cohort",
             )
         }
         for task in database.list_tasks(run_id)
     ]
     trials = []
     for trial in database.list_trials(run_id):
-        trials.append(
-            {
-                key: trial[key]
-                for key in (
-                    "id",
-                    "task_id",
-                    "pr_number",
-                    "phase",
-                    "skill_version",
-                    "status",
-                    "passed",
-                    "elapsed_seconds",
-                    "cost_usd",
-                    "model",
-                )
-            }
-            | {"trace": _public_trace(trial.get("trace", ""))}
-        )
-
-    skills = [
-        {
-            key: skill[key]
-            for key in ("version", "parent_version", "content", "training_passes", "created_at")
+        public_trial = {
+            key: trial.get(key)
+            for key in (
+                "id", "task_id", "pr_number", "phase", "skill_version", "status",
+                "passed", "elapsed_seconds", "model", "actual_model", "tokens_input",
+                "tokens_output", "tokens_reasoning", "config_id", "skill_mode",
+            )
         }
-        for skill in database.list_skill_versions(run_id)
-    ]
+        public_trial["cost_verified"] = trial.get("cost_verified") is True
+        public_trial["cost_usd"] = (
+            trial.get("cost_usd") if public_trial["cost_verified"] else None
+        )
+        public_trial["trace"] = _public_trace(trial.get("trace", ""))
+        public_trial["steps"] = _public_steps(trial.get("engine_history"))
+        trials.append(public_trial)
+
+    skills = []
+    for skill in database.list_skill_versions(run_id):
+        public_skill = {
+            key: skill.get(key)
+            for key in ("version", "parent_version", "training_passes", "created_at")
+        }
+        public_skill["content"] = _scrub(str(skill.get("content", "")))
+        skills.append(public_skill)
     events = []
     for event in database.list_events(run_id, limit=1000):
         payload = json.loads(event["payload_json"])
@@ -102,13 +104,21 @@ def export_replay(database: RunDatabase, run_id: str, destination: Path) -> Path
             }
         )
 
-    replay = {
-        "schema_version": 1,
+    report_detail = {
         "run": public_run,
         "tasks": tasks,
         "trials": trials,
         "skills": skills,
         "events": events,
+    }
+    replay = {
+        "schema_version": 2,
+        "run": public_run,
+        "tasks": tasks,
+        "trials": trials,
+        "skills": skills,
+        "events": events,
+        "analysis_report": build_analysis_report(report_detail),
     }
     destination.parent.mkdir(parents=True, exist_ok=True)
     temporary = destination.with_suffix(destination.suffix + ".tmp")
@@ -133,6 +143,40 @@ def _public_trace(raw_trace: str) -> dict[str, Any]:
         "source_diff": _scrub(str(trace.get("source_diff", "")))[:12_000],
         "unauthorized_changes_restored": bool(trace.get("unauthorized_changes_restored")),
     }
+
+
+def _public_steps(engine_history: Any) -> list[dict[str, Any]]:
+    """Publish action labels and token counts while keeping private content local."""
+    if not isinstance(engine_history, dict) or engine_history.get("status") != "available":
+        return []
+    history = engine_history.get("history")
+    messages = history.get("messages") if isinstance(history, dict) else None
+    if not isinstance(messages, list):
+        return []
+    steps: list[dict[str, Any]] = []
+    safe_tool_names = {"read", "write", "edit", "bash", "grep", "glob", "terminal", "apply_patch"}
+    for message in messages:
+        if not isinstance(message, dict) or not isinstance(message.get("parts"), list):
+            continue
+        for part in message["parts"]:
+            if not isinstance(part, dict):
+                continue
+            kind = part.get("kind")
+            if kind == "tool":
+                raw_name = part.get("tool_name")
+                name = raw_name if isinstance(raw_name, str) and raw_name in safe_tool_names else "tool"
+                step = {"kind": "tool", "tool": name}
+            elif kind in {"text", "reasoning"}:
+                step = {"kind": "assistant_message"}
+            else:
+                continue
+            step["role"] = message.get("role") if message.get("role") in {"assistant", "user"} else "unknown"
+            usage = part.get("usage")
+            if isinstance(usage, dict):
+                step["tokens_input"] = usage.get("input_tokens")
+                step["tokens_output"] = usage.get("output_tokens")
+            steps.append(step)
+    return steps
 
 
 def _scrub_value(value: Any) -> Any:

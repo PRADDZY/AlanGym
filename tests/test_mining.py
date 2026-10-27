@@ -4,6 +4,7 @@ from alangym.mining import (
     parse_candidate,
     InsufficientTasksError,
     PullRequestCandidate,
+    build_benchmark_split,
     select_candidates,
     split_tasks,
 )
@@ -44,6 +45,35 @@ def test_task_split_is_fixed_six_four_and_reproducible():
     assert len(heldout) == 4
     assert (training, heldout) == split_tasks(tasks, train_count=6, seed=42)
     assert {item.number for item in training}.isdisjoint(item.number for item in heldout)
+
+
+def test_augmented_benchmark_keeps_four_validation_tasks_and_mines_four_fresh_holdouts():
+    validation = [candidate(number, [f"boltons/old_{number}.py"]) for number in range(90, 94)]
+    fresh = [candidate(number, [f"boltons/new_{number}.py"]) for number in range(1, 11)]
+
+    training, reused, new_heldout = build_benchmark_split(
+        fresh, validation, seed=42,
+    )
+
+    assert len(training) == 6
+    assert len(reused) == len(new_heldout) == 4
+    assert {item.number for item in reused} == {90, 91, 92, 93}
+    assert len({item.number for item in training + reused + new_heldout}) == 14
+    assert {item.number for item in training}.isdisjoint(
+        item.number for item in reused + new_heldout
+    )
+
+
+def test_augmented_benchmark_rejects_fresh_tasks_that_overlap_validation_sources():
+    validation = [
+        candidate(number, [f"boltons/module_{number - 89}.py"])
+        for number in range(90, 94)
+    ]
+    fresh = [candidate(number, [f"boltons/module_{number}.py"]) for number in range(1, 5)]
+    fresh += [candidate(number, [f"boltons/new_{number}.py"]) for number in range(10, 16)]
+
+    with pytest.raises(InsufficientTasksError):
+        build_benchmark_split(fresh, validation, seed=42)
 
 
 def test_split_refuses_to_shrink_when_the_requested_count_is_missing():

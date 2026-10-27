@@ -9,19 +9,30 @@ import json
 import os
 import shutil
 import subprocess
+from dataclasses import asdict
 from pathlib import Path, PurePosixPath
 from typing import Any
 
 from .alan import DEFAULT_MODEL, AgentResult, AlanRunner, RunStatus, SAFE_ENVIRONMENT_VARIABLES
 from .database import RunDatabase, TERMINAL_STATES
-from .mining import InsufficientTasksError, PullRequestCandidate, select_candidates, split_tasks
+from .mining import (
+    InsufficientTasksError,
+    PullRequestCandidate,
+    build_benchmark_split,
+    select_candidates,
+    split_tasks,
+)
 from .repository import PublicGitHubRepository, RepositoryError
 from .replay import export_replay
+from .session_history import HistoryStatus, SessionHistoryResult, read_session_history
 from .validation import TaskValidationError, make_task_snapshot, run_pytest, validate_task
 
 
 TRAINING_COUNT = 6
-HELDOUT_COUNT = 4
+RETAINED_VALIDATION_COUNT = 4
+FRESH_HELDOUT_COUNT = 4
+FRESH_TASK_COUNT = TRAINING_COUNT + FRESH_HELDOUT_COUNT
+HELDOUT_COUNT = RETAINED_VALIDATION_COUNT + FRESH_HELDOUT_COUNT
 TASK_COUNT = TRAINING_COUNT + HELDOUT_COUNT
 MAX_ROUNDS = 2
 SKILL_RELATIVE_PATH = ".agents/skills/alangym/SKILL.md"
@@ -96,7 +107,7 @@ class ExperimentManager:
         try:
             run = self.database.get_run(run_id)
             if run["training_count"] != TRAINING_COUNT or run["heldout_count"] != HELDOUT_COUNT:
-                raise ExperimentBlocked("This build is fixed to 6 training and 4 held-out tasks.")
+                raise ExperimentBlocked("This build is fixed to 6 training and 8 held-out tasks.")
             self.run_cache.mkdir(parents=True, exist_ok=True)
             run_dir = self.run_cache / run_id
             run_dir.mkdir(parents=True, exist_ok=True)
@@ -111,19 +122,31 @@ class ExperimentManager:
                 f"Found {len(candidates)} small PRs with source and test changes",
                 {"count": len(candidates)},
             )
-            if len(candidates) < TASK_COUNT:
-                raise ExperimentBlocked(
-                    f"Need 10 small, test-backed PRs with distinct source files; found {len(candidates)}."
-                )
+            retained_validation = self._load_retained_validation_candidates(
+                run_id, run["repo"], candidates
+            )
 
             python = await self._prepare_test_environment(
                 repository_path, run_id, run_dir, repo_slug=run["repo"]
             )
             self._transition(run_id, "validating", "Checking each task fails before and passes after its PR")
             verified, validation_failures = await self._validate_candidates(
-                run_id, candidates, repository_path, python, run_dir / "validation"
+                run_id,
+                candidates,
+                repository_path,
+                python,
+                run_dir / "validation",
+                required=retained_validation,
+                fresh_count=FRESH_TASK_COUNT,
             )
-            training, heldout = split_tasks(verified, train_count=TRAINING_COUNT, seed=run["seed"])
+            retained_numbers = {candidate.number for candidate in retained_validation}
+            fresh_tasks = [item for item in verified if item.number not in retained_numbers]
+            training, retained_validation, new_heldout = build_benchmark_split(
+                fresh_tasks, retained_validation, seed=run["seed"],
+                train_count=TRAINING_COUNT, new_heldout_count=FRESH_HELDOUT_COUNT,
+            )
+            heldout = retained_validation + new_heldout
+            verified = training + heldout
 
             # Keep seeded membership while running shorter tasks first for faster feedback.
             def task_priority(task: PullRequestCandidate) -> tuple[int, int, int, int]:
@@ -139,17 +162,26 @@ class ExperimentManager:
             heldout = sorted(heldout, key=task_priority)
             train_numbers = {candidate.number for candidate in training}
             task_rows = [
-                self._task_record(candidate, "train" if candidate.number in train_numbers else "heldout")
+                self._task_record(
+                    candidate,
+                    "train" if candidate.number in train_numbers else "heldout",
+                    heldout_cohort=(
+                        "retained_validation" if candidate.number in retained_numbers
+                        else "fresh" if candidate.number not in train_numbers else None
+                    ),
+                )
                 for candidate in verified
             ]
             self.database.save_tasks(run_id, task_rows)
             self._progress(
                 run_id,
                 "split_ready",
-                "Validated 10 PRs and froze the 6/4 task split",
+                "Validated 14 PRs and froze the 6/8 task split",
                 {
                     "training": [item.number for item in training],
                     "heldout": [item.number for item in heldout],
+                    "retained_validation": [item.number for item in retained_validation],
+                    "fresh_heldout": [item.number for item in new_heldout],
                     "seed": run["seed"],
                 },
             )
@@ -161,7 +193,7 @@ class ExperimentManager:
             current_version = _skill_version(current_skill)
             self.database.save_skill_version(run_id, current_version, current_skill)
 
-            self._transition(run_id, "baseline", "Running the baseline skill on all 10 tasks")
+            self._transition(run_id, "baseline", "Running the baseline skill on all 14 tasks")
             baseline = await self._evaluate(
                 run_id, repository_path, python, run_dir, verified, current_skill, current_version,
                 validation_failures=validation_failures,
@@ -238,11 +270,61 @@ class ExperimentManager:
                 if candidate_training is None:
                     return
                 candidate_passes = _pass_count(candidate_training)
-                if candidate_passes > current_passes:
+                regressions = _prior_pass_regressions(current_training, candidate_training)
+                if regressions:
+                    task_by_number = {item.number: item for item in training}
+                    retry_tasks = [task_by_number[number] for number in regressions]
+                    retry_results = await self._evaluate(
+                        run_id, repository_path, python, run_dir, retry_tasks, candidate_skill,
+                        candidate_version, validation_failures=validation_failures,
+                        phase=f"round_{round_number}_ratchet_retry",
+                        trial_prefix=f"r{round_number}-ratchet-retry", round_number=round_number,
+                    )
+                    if retry_results is None:
+                        return
+                    flaky_numbers = _flaky_pr_numbers(
+                        [result for result in candidate_training if result["pr_number"] in regressions],
+                        retry_results,
+                    )
+                    self._record_metric(
+                        run_id, "training", f"round_{round_number}", current_training,
+                        current_version, round_number=round_number,
+                    )
+                    self._progress(
+                        run_id,
+                        "skill_rejected",
+                        f"Round {round_number}: ratchet rejected a candidate that regressed prior passing tasks",
+                        {
+                            "round": round_number,
+                            "version": candidate_version,
+                            "parent_version": current_version,
+                            "accepted": False,
+                            "reason": "prior_pass_regression",
+                            "current_passes": current_passes,
+                            "candidate_passes": candidate_passes,
+                            "flipped_pr_numbers": regressions,
+                            "retry_outcomes": [
+                                {"pr_number": result["pr_number"], "passed": result["passed"]}
+                                for result in retry_results
+                            ],
+                            "flaky_pr_numbers": flaky_numbers,
+                            "proposal_trace": _agent_trace(proposal_result),
+                        },
+                        round_number=round_number,
+                    )
+                elif (
+                    candidate_passes > current_passes
+                    and all(result.get("passed") in (True, False) for result in candidate_training)
+                ):
                     skill_path = self.project_root / SKILL_RELATIVE_PATH
                     self._accept_skill(
                         run_id, skill_path, candidate_skill, current_skill, current_version,
                         candidate_version, candidate_passes, round_number, proposal_result,
+                        source_pr_numbers=[
+                            result["pr_number"] for result in current_training
+                            if result.get("passed") is False
+                        ],
+                        current_passes=current_passes,
                     )
                     current_skill = candidate_skill
                     current_version = candidate_version
@@ -261,8 +343,12 @@ class ExperimentManager:
                         {
                             "round": round_number,
                             "candidate_version": candidate_version,
+                            "parent_version": current_version,
                             "candidate_passes": candidate_passes,
                             "current_passes": current_passes,
+                            "accepted": False,
+                            "reason": "no_training_improvement_or_unknown_result",
+                            "flipped_pr_numbers": [],
                             "proposal_trace": _agent_trace(proposal_result),
                         },
                         round_number=round_number,
@@ -376,6 +462,77 @@ class ExperimentManager:
         )
         return python
 
+    def _load_retained_validation_candidates(
+        self,
+        current_run_id: str,
+        repo: str,
+        candidates: list[PullRequestCandidate],
+    ) -> list[PullRequestCandidate]:
+        """Recover the prior four-task validation cohort only on exact PR identity."""
+        candidate_by_number = {candidate.number: candidate for candidate in candidates}
+
+        def match_rows(rows: list[dict[str, Any]]) -> list[PullRequestCandidate] | None:
+            if len(rows) != RETAINED_VALIDATION_COUNT:
+                return None
+            matched: list[PullRequestCandidate] = []
+            for row in rows:
+                number = int(row["pr_number"])
+                candidate = candidate_by_number.get(number)
+                if candidate is None:
+                    return None
+                if (
+                    candidate.merge_sha != row.get("merge_sha")
+                    or candidate.base_sha != row.get("base_sha")
+                    or sorted(candidate.source_paths) != sorted(row.get("source_paths", []))
+                    or list(candidate.test_paths) != list(row.get("test_paths", []))
+                ):
+                    return None
+                matched.append(candidate)
+            return matched
+
+        for previous in self.database.list_runs(limit=100):
+            if (
+                previous["id"] == current_run_id
+                or previous["repo"].casefold() != repo.casefold()
+                or previous["state"] != "complete"
+            ):
+                continue
+            task_rows = self.database.list_tasks(previous["id"])
+            retained = [
+                row for row in task_rows
+                if row.get("split") == "heldout"
+                and row.get("heldout_cohort") == "retained_validation"
+            ]
+            if not retained and previous["heldout_count"] == RETAINED_VALIDATION_COUNT:
+                retained = [row for row in task_rows if row.get("split") == "heldout"]
+            matched = match_rows(retained)
+            if matched is not None:
+                return matched
+
+        replay_path = self.project_root / "web" / "public" / "data" / "demo-run.json"
+        try:
+            replay = json.loads(replay_path.read_text(encoding="utf-8"))
+            previous_run = replay.get("run", {})
+            task_rows = replay.get("tasks", [])
+        except (OSError, json.JSONDecodeError):
+            previous_run, task_rows = {}, []
+        if previous_run.get("repo", "").casefold() == repo.casefold():
+            retained = [
+                row for row in task_rows
+                if row.get("split") == "heldout"
+                and row.get("heldout_cohort") == "retained_validation"
+            ]
+            if not retained and previous_run.get("heldout_count") == RETAINED_VALIDATION_COUNT:
+                retained = [row for row in task_rows if row.get("split") == "heldout"]
+            matched = match_rows(retained)
+            if matched is not None:
+                return matched
+
+        raise ExperimentBlocked(
+            "Could not recover four exact held-out validation tasks from a completed local run "
+            "or the saved public replay. No tasks were relabeled to fill the cohort."
+        )
+
     async def _validate_candidates(
         self,
         run_id: str,
@@ -383,12 +540,22 @@ class ExperimentManager:
         repository_path: Path,
         python: Path,
         validation_root: Path,
+        *,
+        required: list[PullRequestCandidate],
+        fresh_count: int,
     ) -> tuple[list[PullRequestCandidate], dict[int, str]]:
-        remaining = list(candidates)
+        required_numbers = {candidate.number for candidate in required}
+        required_sources = set().union(*(candidate.source_paths for candidate in required))
+        remaining = [
+            candidate for candidate in candidates
+            if candidate.number not in required_numbers
+            and not candidate.source_paths.intersection(required_sources)
+        ]
+        fresh_selection = select_candidates(remaining, count=fresh_count)
         validated: set[int] = set()
         validation_failures: dict[int, str] = {}
         while True:
-            selection = select_candidates(remaining, count=TASK_COUNT)
+            selection = required + fresh_selection
             failed_candidate = False
             for candidate in selection:
                 if candidate.number in validated:
@@ -409,7 +576,12 @@ class ExperimentManager:
                         f"Skipped PR #{candidate.number}: its changed tests are not a clean regression",
                         {"pr_number": candidate.number, "reason": str(error)[:2_000]},
                     )
+                    if candidate.number in required_numbers:
+                        raise ExperimentBlocked(
+                            f"Retained held-out PR #{candidate.number} no longer validates: {error}"
+                        ) from error
                     remaining = [item for item in remaining if item.number != candidate.number]
+                    fresh_selection = select_candidates(remaining, count=fresh_count)
                     failed_candidate = True
                     break
                 self._progress(
@@ -463,10 +635,12 @@ class ExperimentManager:
                 workspace,
                 timeout=EFFECTIVE_TIMEOUT, tool_path=python.parent,
             )
+            engine_history = await asyncio.to_thread(read_session_history, workspace)
             if agent.status is RunStatus.AUTH_REQUIRED:
                 trial = self._new_trial(
                     trial_id, candidate, phase, skill_version, "auth_required", None,
                     agent.elapsed_seconds, _agent_trace(agent),
+                    engine_history=_engine_history_record(engine_history),
                 )
                 self.database.save_trial(run_id, trial)
                 raise ExperimentBlocked(
@@ -501,7 +675,8 @@ class ExperimentManager:
             )
             trial = self._new_trial(
                 trial_id, candidate, phase, skill_version, status, passed_value,
-                agent.elapsed_seconds + grade.elapsed_seconds, trace,
+                    agent.elapsed_seconds + grade.elapsed_seconds, trace,
+                    engine_history=_engine_history_record(engine_history),
             )
             self.database.save_trial(run_id, trial)
             results.append(trial)
@@ -588,6 +763,9 @@ class ExperimentManager:
         training_passes: int,
         round_number: int,
         proposal: AgentResult,
+        *,
+        source_pr_numbers: list[int],
+        current_passes: int,
     ) -> None:
         skill_path.write_text(content, encoding="utf-8")
         subprocess.run(
@@ -613,6 +791,12 @@ class ExperimentManager:
                 "version": version,
                 "parent_version": parent_version,
                 "training_passes": training_passes,
+                "current_passes": current_passes,
+                "candidate_passes": training_passes,
+                "accepted": True,
+                "reason": "training_improved_without_prior_pass_regression",
+                "flipped_pr_numbers": [],
+                "source_pr_numbers": source_pr_numbers,
                 "diff": _skill_text_diff(parent_content, content, parent_version, version),
                 "proposal_trace": _agent_trace(proposal),
             },
@@ -664,7 +848,12 @@ class ExperimentManager:
         )
 
     @staticmethod
-    def _task_record(candidate: PullRequestCandidate, split: str) -> dict[str, Any]:
+    def _task_record(
+        candidate: PullRequestCandidate,
+        split: str,
+        *,
+        heldout_cohort: str | None = None,
+    ) -> dict[str, Any]:
         return {
             "id": f"pr-{candidate.number}",
             "pr_number": candidate.number,
@@ -677,6 +866,7 @@ class ExperimentManager:
             "test_paths": list(candidate.test_paths),
             "fixture_paths": list(candidate.fixture_paths),
             "split": split,
+            "heldout_cohort": heldout_cohort,
         }
 
     @staticmethod
@@ -689,7 +879,11 @@ class ExperimentManager:
         passed: bool | None,
         elapsed_seconds: float,
         trace: str,
+        *,
+        engine_history: dict[str, Any] | None = None,
     ) -> dict[str, Any]:
+        history = engine_history or {"status": "unavailable", "reason": "no_match"}
+        usage = history.get("history", {}).get("usage", {})
         return {
             "id": trial_id,
             "task_id": f"pr-{candidate.number}",
@@ -700,7 +894,13 @@ class ExperimentManager:
             "passed": passed,
             "elapsed_seconds": round(elapsed_seconds, 3),
             "cost_usd": None,
+            "cost_verified": False,
             "model": DEFAULT_MODEL,
+            "actual_model": history.get("history", {}).get("model_id"),
+            "tokens_input": usage.get("input_tokens"),
+            "tokens_output": usage.get("output_tokens"),
+            "tokens_reasoning": usage.get("reasoning_tokens"),
+            "engine_history": history,
             "trace": trace,
         }
 
@@ -818,15 +1018,20 @@ def _task_instruction(
     allowed = "\n".join(f"- {path}" for path in sorted(candidate.source_paths))
     description = candidate.body.strip()[:3_000] or "No description was provided."
     failure = validation_failure[-4_000:].strip() or "No failure output was available."
+    skill_instruction = (
+        "Follow this Alan skill:\n" + skill
+        if skill else "Use no extra repair skill or repository-local skill instructions."
+    )
     return (
         f"Fix this regression in the repository using only these source files:\n{allowed}\n\n"
         f"Task from merged PR #{candidate.number}: {candidate.title}\n\n{description}\n\n"
         "Make the smallest source fix and report the change briefly.\n\n"
-        "Follow this Alan skill:\n" + skill +
-        f"\n\nHarness rule: the harness will run {python.name} -m pytest -q {tests} after you finish. "
-        "You may read tests, but do not run tests or edit tests, project files, or other repository files. "
-        "This rule overrides any conflicting test instruction in the skill.\n\n"
-        "Pre-fix test failure output:\n" + failure
+        + skill_instruction
+        + f"\n\nHarness rule: the harness will run {python.name} -m pytest -q {tests} after you finish. "
+        + "You may read tests, but do not run tests or edit tests, project files, or other repository files. "
+        + "This rule overrides any conflicting test instruction in the skill.\n\n"
+        + "Pre-fix test failure output:\n"
+        + failure
     )
 
 
@@ -850,6 +1055,44 @@ def _valid_skill(content: str) -> bool:
 
 def _pass_count(results: list[dict[str, Any]]) -> int:
     return sum(result.get("passed") is True for result in results)
+
+
+def _prior_pass_regressions(
+    current: list[dict[str, Any]], candidate: list[dict[str, Any]],
+) -> list[int]:
+    """Return tasks a candidate changed from a known pass to a known failure."""
+    current_by_pr = {int(result["pr_number"]): result for result in current}
+    candidate_by_pr = {int(result["pr_number"]): result for result in candidate}
+    return sorted(
+        pr_number
+        for pr_number, current_result in current_by_pr.items()
+        if current_result.get("passed") is True
+        and candidate_by_pr.get(pr_number, {}).get("passed") is False
+    )
+
+
+def _flaky_pr_numbers(
+    first_attempts: list[dict[str, Any]], retries: list[dict[str, Any]],
+) -> list[int]:
+    """Flag a task when its retry disagrees with the candidate's first attempt."""
+    first_by_pr = {int(result["pr_number"]): result for result in first_attempts}
+    retry_by_pr = {int(result["pr_number"]): result for result in retries}
+    return sorted(
+        pr_number
+        for pr_number, first in first_by_pr.items()
+        if first.get("passed") in (True, False)
+        and retry_by_pr.get(pr_number, {}).get("passed") in (True, False)
+        and first["passed"] is not retry_by_pr[pr_number]["passed"]
+    )
+
+
+def _engine_history_record(result: SessionHistoryResult) -> dict[str, Any]:
+    if result.status is not HistoryStatus.AVAILABLE or result.history is None:
+        return {
+            "status": result.status.value,
+            "reason": result.reason.value if result.reason is not None else None,
+        }
+    return {"status": "available", "history": asdict(result.history)}
 
 
 def _agent_trace(result: AgentResult) -> str:

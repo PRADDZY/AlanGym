@@ -1,4 +1,466 @@
 {
+  "analysis_report": {
+    "battle": {
+      "reason": "No matched Flash ladder task pair is saved",
+      "status": "unavailable"
+    },
+    "benchmark": {
+      "heldout_count": 4,
+      "repo": "mahmoud/boltons",
+      "seed": 42,
+      "training_count": 6
+    },
+    "compiler": {
+      "reason": "No saved results for this feature",
+      "status": "unavailable"
+    },
+    "coverage": {
+      "costs_verified": false,
+      "task_count": 10,
+      "token_counts_complete": false,
+      "trial_count": 38
+    },
+    "fork": {
+      "reason": "No saved results for this feature",
+      "status": "unavailable"
+    },
+    "heatmap": {
+      "phases": [
+        "baseline",
+        "round_1_current",
+        "round_1_candidate",
+        "round_2_current",
+        "round_2_candidate",
+        "final"
+      ],
+      "tasks": [
+        {
+          "heldout_cohort": "retained_validation",
+          "outcomes": {
+            "baseline": true,
+            "final": true,
+            "round_1_candidate": null,
+            "round_1_current": null,
+            "round_2_candidate": null,
+            "round_2_current": null
+          },
+          "pr_number": 247,
+          "split": "heldout",
+          "task_id": "pr-247"
+        },
+        {
+          "heldout_cohort": null,
+          "outcomes": {
+            "baseline": true,
+            "final": null,
+            "round_1_candidate": true,
+            "round_1_current": true,
+            "round_2_candidate": true,
+            "round_2_current": false
+          },
+          "pr_number": 278,
+          "split": "train",
+          "task_id": "pr-278"
+        },
+        {
+          "heldout_cohort": null,
+          "outcomes": {
+            "baseline": false,
+            "final": null,
+            "round_1_candidate": false,
+            "round_1_current": true,
+            "round_2_candidate": true,
+            "round_2_current": true
+          },
+          "pr_number": 332,
+          "split": "train",
+          "task_id": "pr-332"
+        },
+        {
+          "heldout_cohort": null,
+          "outcomes": {
+            "baseline": false,
+            "final": null,
+            "round_1_candidate": true,
+            "round_1_current": true,
+            "round_2_candidate": false,
+            "round_2_current": true
+          },
+          "pr_number": 341,
+          "split": "train",
+          "task_id": "pr-341"
+        },
+        {
+          "heldout_cohort": null,
+          "outcomes": {
+            "baseline": true,
+            "final": null,
+            "round_1_candidate": true,
+            "round_1_current": true,
+            "round_2_candidate": true,
+            "round_2_current": true
+          },
+          "pr_number": 407,
+          "split": "train",
+          "task_id": "pr-407"
+        },
+        {
+          "heldout_cohort": "retained_validation",
+          "outcomes": {
+            "baseline": true,
+            "final": true,
+            "round_1_candidate": null,
+            "round_1_current": null,
+            "round_2_candidate": null,
+            "round_2_current": null
+          },
+          "pr_number": 428,
+          "split": "heldout",
+          "task_id": "pr-428"
+        },
+        {
+          "heldout_cohort": null,
+          "outcomes": {
+            "baseline": true,
+            "final": null,
+            "round_1_candidate": true,
+            "round_1_current": true,
+            "round_2_candidate": true,
+            "round_2_current": true
+          },
+          "pr_number": 437,
+          "split": "train",
+          "task_id": "pr-437"
+        },
+        {
+          "heldout_cohort": null,
+          "outcomes": {
+            "baseline": true,
+            "final": null,
+            "round_1_candidate": true,
+            "round_1_current": true,
+            "round_2_candidate": true,
+            "round_2_current": true
+          },
+          "pr_number": 454,
+          "split": "train",
+          "task_id": "pr-454"
+        },
+        {
+          "heldout_cohort": "retained_validation",
+          "outcomes": {
+            "baseline": true,
+            "final": true,
+            "round_1_candidate": null,
+            "round_1_current": null,
+            "round_2_candidate": null,
+            "round_2_current": null
+          },
+          "pr_number": 455,
+          "split": "heldout",
+          "task_id": "pr-455"
+        },
+        {
+          "heldout_cohort": "retained_validation",
+          "outcomes": {
+            "baseline": true,
+            "final": false,
+            "round_1_candidate": null,
+            "round_1_current": null,
+            "round_2_candidate": null,
+            "round_2_current": null
+          },
+          "pr_number": 513,
+          "split": "heldout",
+          "task_id": "pr-513"
+        }
+      ]
+    },
+    "heldout": {
+      "baseline": {
+        "completed": 4,
+        "passed": 4,
+        "rate": 1.0,
+        "total": 4,
+        "unknown": 0
+      },
+      "final": {
+        "completed": 4,
+        "passed": 3,
+        "rate": 0.75,
+        "total": 4,
+        "unknown": 0
+      },
+      "round_1_candidate": {
+        "completed": 0,
+        "passed": 0,
+        "rate": null,
+        "total": 4,
+        "unknown": 4
+      },
+      "round_1_current": {
+        "completed": 0,
+        "passed": 0,
+        "rate": null,
+        "total": 4,
+        "unknown": 4
+      },
+      "round_2_candidate": {
+        "completed": 0,
+        "passed": 0,
+        "rate": null,
+        "total": 4,
+        "unknown": 4
+      },
+      "round_2_current": {
+        "completed": 0,
+        "passed": 0,
+        "rate": null,
+        "total": 4,
+        "unknown": 4
+      }
+    },
+    "ladder": {
+      "configs": [
+        {
+          "cost_per_pass": null,
+          "cost_usd": null,
+          "id": "flash_no_skill",
+          "label": "DeepSeek V4.1 Flash",
+          "model": "deepseek/deepseek-v4.1-flash",
+          "passed": null,
+          "rate": null,
+          "reason": "No valid grader outcomes for this configuration",
+          "skill_mode": "none",
+          "status": "unavailable",
+          "task_ids": [],
+          "tokens_input": null,
+          "tokens_output": null,
+          "tokens_per_pass": null,
+          "total": 4
+        },
+        {
+          "cost_per_pass": null,
+          "cost_usd": null,
+          "id": "flash_current_skill",
+          "label": "Flash with current skill",
+          "model": "deepseek/deepseek-v4.1-flash",
+          "passed": null,
+          "rate": null,
+          "reason": "No valid grader outcomes for this configuration",
+          "skill_mode": "current",
+          "status": "unavailable",
+          "task_ids": [],
+          "tokens_input": null,
+          "tokens_output": null,
+          "tokens_per_pass": null,
+          "total": 4
+        },
+        {
+          "cost_per_pass": null,
+          "cost_usd": null,
+          "id": "deepseek_pro_no_skill",
+          "label": "DeepSeek V4 Pro",
+          "model": "deepseek/deepseek-v4-pro",
+          "passed": null,
+          "rate": null,
+          "reason": "No valid grader outcomes for this configuration",
+          "skill_mode": "none",
+          "status": "unavailable",
+          "task_ids": [],
+          "tokens_input": null,
+          "tokens_output": null,
+          "tokens_per_pass": null,
+          "total": 4
+        }
+      ],
+      "task_ids": [
+        "pr-247",
+        "pr-428",
+        "pr-455",
+        "pr-513"
+      ]
+    },
+    "lineage": [
+      {
+        "accepted": false,
+        "current_passes": 6,
+        "flaky_pr_numbers": [],
+        "flipped_pr_numbers": [],
+        "message": "Round 1: kept the current skill (5/6 did not improve on 6/6)",
+        "parent_version": null,
+        "reason": null,
+        "source_pr_numbers": [],
+        "training_passes": 5,
+        "type": "skill_rejected",
+        "version": "v-0210f76b"
+      },
+      {
+        "accepted": false,
+        "current_passes": 5,
+        "flaky_pr_numbers": [],
+        "flipped_pr_numbers": [],
+        "message": "Round 2: kept the current skill (5/6 did not improve on 5/6)",
+        "parent_version": null,
+        "reason": null,
+        "source_pr_numbers": [],
+        "training_passes": 5,
+        "type": "skill_rejected",
+        "version": "v-35c9f17c"
+      }
+    ],
+    "provenance": {
+      "lines": [
+        {
+          "line": 1,
+          "origin": "initial",
+          "text": "---"
+        },
+        {
+          "line": 2,
+          "origin": "initial",
+          "text": "name: alangym-repair"
+        },
+        {
+          "line": 3,
+          "origin": "initial",
+          "text": "description: Solve one verified regression task using the same small, testable practices."
+        },
+        {
+          "line": 4,
+          "origin": "initial",
+          "text": "---"
+        },
+        {
+          "line": 6,
+          "origin": "initial",
+          "text": "# Working a regression task"
+        },
+        {
+          "line": 8,
+          "origin": "initial",
+          "text": "- Read the relevant source and regression tests before editing."
+        },
+        {
+          "line": 9,
+          "origin": "initial",
+          "text": "- Make the smallest source change that fixes the reported behavior."
+        },
+        {
+          "line": 10,
+          "origin": "initial",
+          "text": "- Preserve the repository's surrounding style and public interfaces."
+        },
+        {
+          "line": 11,
+          "origin": "initial",
+          "text": "- Do not edit tests, project configuration, or files outside the task's allowed source list."
+        },
+        {
+          "line": 12,
+          "origin": "initial",
+          "text": "- Run the frozen regression command if it is available in the environment."
+        },
+        {
+          "line": 13,
+          "origin": "initial",
+          "text": "- Report changed source files and the actual test result. Never claim tests passed unless they ran."
+        }
+      ],
+      "source_pr_numbers": [],
+      "status": "initial_only",
+      "version": "v-927c7620"
+    },
+    "ratchet": {
+      "reason": "No saved candidate decision has run through the ratchet",
+      "status": "unavailable"
+    },
+    "run_id": "ee6cafdc34a64b41adcb2fc5528045e1",
+    "schema_version": 1,
+    "training": {
+      "baseline": {
+        "completed": 6,
+        "passed": 4,
+        "rate": 0.6666666666666666,
+        "total": 6,
+        "unknown": 0
+      },
+      "final": {
+        "completed": 0,
+        "passed": 0,
+        "rate": null,
+        "total": 6,
+        "unknown": 6
+      },
+      "round_1_candidate": {
+        "completed": 6,
+        "passed": 5,
+        "rate": 0.8333333333333334,
+        "total": 6,
+        "unknown": 0
+      },
+      "round_1_current": {
+        "completed": 6,
+        "passed": 6,
+        "rate": 1.0,
+        "total": 6,
+        "unknown": 0
+      },
+      "round_2_candidate": {
+        "completed": 6,
+        "passed": 5,
+        "rate": 0.8333333333333334,
+        "total": 6,
+        "unknown": 0
+      },
+      "round_2_current": {
+        "completed": 6,
+        "passed": 5,
+        "rate": 0.8333333333333334,
+        "total": 6,
+        "unknown": 0
+      }
+    },
+    "twins": {
+      "reason": "No saved results for this feature",
+      "status": "unavailable"
+    },
+    "xray": {
+      "changed_tasks": 1,
+      "left_label": "baseline",
+      "mode": "task_level",
+      "outcomes": [
+        {
+          "baseline_passed": true,
+          "changed": false,
+          "final_passed": true,
+          "task_id": "pr-247"
+        },
+        {
+          "baseline_passed": true,
+          "changed": false,
+          "final_passed": true,
+          "task_id": "pr-428"
+        },
+        {
+          "baseline_passed": true,
+          "changed": false,
+          "final_passed": true,
+          "task_id": "pr-455"
+        },
+        {
+          "baseline_passed": true,
+          "changed": true,
+          "final_passed": false,
+          "task_id": "pr-513"
+        }
+      ],
+      "reason": "Full-task outcomes show association; they do not isolate a skill line or agent step",
+      "right_label": "final",
+      "status": "measured",
+      "total_tasks": 4
+    }
+  },
   "events": [
     {
       "created_at": "2026-10-26T20:40:37+00:00",
@@ -1433,7 +1895,7 @@
     "training_count": 6,
     "updated_at": "2026-10-26T22:34:33+00:00"
   },
-  "schema_version": 1,
+  "schema_version": 2,
   "skills": [
     {
       "content": "---\nname: alangym-repair\ndescription: Solve one verified regression task using the same small, testable practices.\n---\n\n# Working a regression task\n\n- Read the relevant source and regression tests before editing.\n- Make the smallest source change that fixes the reported behavior.\n- Preserve the repository's surrounding style and public interfaces.\n- Do not edit tests, project configuration, or files outside the task's allowed source list.\n- Run the frozen regression command if it is available in the environment.\n- Report changed source files and the actual test result. Never claim tests passed unless they ran.\n",
@@ -1447,6 +1909,7 @@
     {
       "base_sha": "961dcff3f42e73b245aef65e377fe82763b257bb",
       "fixture_paths": [],
+      "heldout_cohort": "retained_validation",
       "id": "pr-513",
       "merge_sha": "4e5faa3d7e4008d89e0d8bf1ea87b6d9a061a16d",
       "merged_at": "2026-09-23T23:55:31Z",
@@ -1463,6 +1926,7 @@
     {
       "base_sha": "967864f89791509f9eb36b22b4579d36b72a6df2",
       "fixture_paths": [],
+      "heldout_cohort": "retained_validation",
       "id": "pr-455",
       "merge_sha": "d45cc414e33aa4e08a73e0993574df4397e2e9db",
       "merged_at": "2026-09-07T08:40:45Z",
@@ -1511,6 +1975,7 @@
     {
       "base_sha": "57cb026b7f47cd2765a0d5acdc83849ed5f1f6a3",
       "fixture_paths": [],
+      "heldout_cohort": "retained_validation",
       "id": "pr-428",
       "merge_sha": "ead236e278ca0466bf468de746b5960fb12d7e5b",
       "merged_at": "2026-07-18T00:43:23Z",
@@ -1591,6 +2056,7 @@
     {
       "base_sha": "81e44a2319ce0bef0de44f1059762b97879cb35d",
       "fixture_paths": [],
+      "heldout_cohort": "retained_validation",
       "id": "pr-247",
       "merge_sha": "fee5adb0f99f91c077c769d8efd269ef44203848",
       "merged_at": "2020-03-28T20:50:16Z",
@@ -1608,6 +2074,7 @@
   "trials": [
     {
       "cost_usd": null,
+      "cost_verified": false,
       "elapsed_seconds": 276.577,
       "id": "baseline:pr-341",
       "model": "deepseek/deepseek-v4.1-flash",
@@ -1626,6 +2093,7 @@
     },
     {
       "cost_usd": null,
+      "cost_verified": false,
       "elapsed_seconds": 137.705,
       "id": "baseline:pr-247",
       "model": "deepseek/deepseek-v4.1-flash",
@@ -1644,6 +2112,7 @@
     },
     {
       "cost_usd": null,
+      "cost_verified": false,
       "elapsed_seconds": 22.626,
       "id": "baseline:pr-332",
       "model": "deepseek/deepseek-v4.1-flash",
@@ -1662,6 +2131,7 @@
     },
     {
       "cost_usd": null,
+      "cost_verified": false,
       "elapsed_seconds": 222.637,
       "id": "baseline:pr-407",
       "model": "deepseek/deepseek-v4.1-flash",
@@ -1680,6 +2150,7 @@
     },
     {
       "cost_usd": null,
+      "cost_verified": false,
       "elapsed_seconds": 249.93,
       "id": "baseline:pr-278",
       "model": "deepseek/deepseek-v4.1-flash",
@@ -1698,6 +2169,7 @@
     },
     {
       "cost_usd": null,
+      "cost_verified": false,
       "elapsed_seconds": 272.191,
       "id": "baseline:pr-455",
       "model": "deepseek/deepseek-v4.1-flash",
@@ -1716,6 +2188,7 @@
     },
     {
       "cost_usd": null,
+      "cost_verified": false,
       "elapsed_seconds": 449.818,
       "id": "baseline:pr-454",
       "model": "deepseek/deepseek-v4.1-flash",
@@ -1734,6 +2207,7 @@
     },
     {
       "cost_usd": null,
+      "cost_verified": false,
       "elapsed_seconds": 245.707,
       "id": "baseline:pr-428",
       "model": "deepseek/deepseek-v4.1-flash",
@@ -1752,6 +2226,7 @@
     },
     {
       "cost_usd": null,
+      "cost_verified": false,
       "elapsed_seconds": 405.159,
       "id": "baseline:pr-437",
       "model": "deepseek/deepseek-v4.1-flash",
@@ -1770,6 +2245,7 @@
     },
     {
       "cost_usd": null,
+      "cost_verified": false,
       "elapsed_seconds": 269.66,
       "id": "baseline:pr-513",
       "model": "deepseek/deepseek-v4.1-flash",
@@ -1788,6 +2264,7 @@
     },
     {
       "cost_usd": null,
+      "cost_verified": false,
       "elapsed_seconds": 385.3,
       "id": "r1-current:pr-341",
       "model": "deepseek/deepseek-v4.1-flash",
@@ -1806,6 +2283,7 @@
     },
     {
       "cost_usd": null,
+      "cost_verified": false,
       "elapsed_seconds": 234.084,
       "id": "r1-current:pr-332",
       "model": "deepseek/deepseek-v4.1-flash",
@@ -1824,6 +2302,7 @@
     },
     {
       "cost_usd": null,
+      "cost_verified": false,
       "elapsed_seconds": 149.26,
       "id": "r1-current:pr-407",
       "model": "deepseek/deepseek-v4.1-flash",
@@ -1842,6 +2321,7 @@
     },
     {
       "cost_usd": null,
+      "cost_verified": false,
       "elapsed_seconds": 206.95,
       "id": "r1-current:pr-278",
       "model": "deepseek/deepseek-v4.1-flash",
@@ -1860,6 +2340,7 @@
     },
     {
       "cost_usd": null,
+      "cost_verified": false,
       "elapsed_seconds": 115.508,
       "id": "r1-current:pr-454",
       "model": "deepseek/deepseek-v4.1-flash",
@@ -1878,6 +2359,7 @@
     },
     {
       "cost_usd": null,
+      "cost_verified": false,
       "elapsed_seconds": 150.361,
       "id": "r1-current:pr-437",
       "model": "deepseek/deepseek-v4.1-flash",
@@ -1896,6 +2378,7 @@
     },
     {
       "cost_usd": null,
+      "cost_verified": false,
       "elapsed_seconds": 250.475,
       "id": "r1-candidate:pr-341",
       "model": "deepseek/deepseek-v4.1-flash",
@@ -1914,6 +2397,7 @@
     },
     {
       "cost_usd": null,
+      "cost_verified": false,
       "elapsed_seconds": 85.172,
       "id": "r1-candidate:pr-332",
       "model": "deepseek/deepseek-v4.1-flash",
@@ -1932,6 +2416,7 @@
     },
     {
       "cost_usd": null,
+      "cost_verified": false,
       "elapsed_seconds": 81.042,
       "id": "r1-candidate:pr-407",
       "model": "deepseek/deepseek-v4.1-flash",
@@ -1950,6 +2435,7 @@
     },
     {
       "cost_usd": null,
+      "cost_verified": false,
       "elapsed_seconds": 90.706,
       "id": "r1-candidate:pr-278",
       "model": "deepseek/deepseek-v4.1-flash",
@@ -1968,6 +2454,7 @@
     },
     {
       "cost_usd": null,
+      "cost_verified": false,
       "elapsed_seconds": 115.126,
       "id": "r1-candidate:pr-454",
       "model": "deepseek/deepseek-v4.1-flash",
@@ -1986,6 +2473,7 @@
     },
     {
       "cost_usd": null,
+      "cost_verified": false,
       "elapsed_seconds": 70.037,
       "id": "r1-candidate:pr-437",
       "model": "deepseek/deepseek-v4.1-flash",
@@ -2004,6 +2492,7 @@
     },
     {
       "cost_usd": null,
+      "cost_verified": false,
       "elapsed_seconds": 168.065,
       "id": "r2-current:pr-341",
       "model": "deepseek/deepseek-v4.1-flash",
@@ -2022,6 +2511,7 @@
     },
     {
       "cost_usd": null,
+      "cost_verified": false,
       "elapsed_seconds": 172.621,
       "id": "r2-current:pr-332",
       "model": "deepseek/deepseek-v4.1-flash",
@@ -2040,6 +2530,7 @@
     },
     {
       "cost_usd": null,
+      "cost_verified": false,
       "elapsed_seconds": 108.739,
       "id": "r2-current:pr-407",
       "model": "deepseek/deepseek-v4.1-flash",
@@ -2058,6 +2549,7 @@
     },
     {
       "cost_usd": null,
+      "cost_verified": false,
       "elapsed_seconds": 118.167,
       "id": "r2-current:pr-278",
       "model": "deepseek/deepseek-v4.1-flash",
@@ -2076,6 +2568,7 @@
     },
     {
       "cost_usd": null,
+      "cost_verified": false,
       "elapsed_seconds": 87.488,
       "id": "r2-current:pr-454",
       "model": "deepseek/deepseek-v4.1-flash",
@@ -2094,6 +2587,7 @@
     },
     {
       "cost_usd": null,
+      "cost_verified": false,
       "elapsed_seconds": 59.117,
       "id": "r2-current:pr-437",
       "model": "deepseek/deepseek-v4.1-flash",
@@ -2112,6 +2606,7 @@
     },
     {
       "cost_usd": null,
+      "cost_verified": false,
       "elapsed_seconds": 192.994,
       "id": "r2-candidate:pr-341",
       "model": "deepseek/deepseek-v4.1-flash",
@@ -2130,6 +2625,7 @@
     },
     {
       "cost_usd": null,
+      "cost_verified": false,
       "elapsed_seconds": 119.316,
       "id": "r2-candidate:pr-332",
       "model": "deepseek/deepseek-v4.1-flash",
@@ -2148,6 +2644,7 @@
     },
     {
       "cost_usd": null,
+      "cost_verified": false,
       "elapsed_seconds": 51.192,
       "id": "r2-candidate:pr-407",
       "model": "deepseek/deepseek-v4.1-flash",
@@ -2166,6 +2663,7 @@
     },
     {
       "cost_usd": null,
+      "cost_verified": false,
       "elapsed_seconds": 81.976,
       "id": "r2-candidate:pr-278",
       "model": "deepseek/deepseek-v4.1-flash",
@@ -2184,6 +2682,7 @@
     },
     {
       "cost_usd": null,
+      "cost_verified": false,
       "elapsed_seconds": 79.305,
       "id": "r2-candidate:pr-454",
       "model": "deepseek/deepseek-v4.1-flash",
@@ -2202,6 +2701,7 @@
     },
     {
       "cost_usd": null,
+      "cost_verified": false,
       "elapsed_seconds": 51.056,
       "id": "r2-candidate:pr-437",
       "model": "deepseek/deepseek-v4.1-flash",
@@ -2220,6 +2720,7 @@
     },
     {
       "cost_usd": null,
+      "cost_verified": false,
       "elapsed_seconds": 161.916,
       "id": "final:pr-247",
       "model": "deepseek/deepseek-v4.1-flash",
@@ -2238,6 +2739,7 @@
     },
     {
       "cost_usd": null,
+      "cost_verified": false,
       "elapsed_seconds": 60.395,
       "id": "final:pr-455",
       "model": "deepseek/deepseek-v4.1-flash",
@@ -2256,6 +2758,7 @@
     },
     {
       "cost_usd": null,
+      "cost_verified": false,
       "elapsed_seconds": 42.519,
       "id": "final:pr-428",
       "model": "deepseek/deepseek-v4.1-flash",
@@ -2274,6 +2777,7 @@
     },
     {
       "cost_usd": null,
+      "cost_verified": false,
       "elapsed_seconds": 173.166,
       "id": "final:pr-513",
       "model": "deepseek/deepseek-v4.1-flash",

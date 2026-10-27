@@ -42,9 +42,12 @@ overlaid and passes on the merged commit. An import error for a missing symbol
 from the changed module counts as a pre-fix regression; unrelated collection
 errors do not.
 
-The benchmark requires exactly 10 verified tasks: 6 training and 4 held out.
-The default split seed is 42. If the miner cannot verify all ten tasks, it
-blocks the run instead of reducing the sample.
+The benchmark requires exactly 14 verified tasks: 6 training and 8 held out.
+Four held-out tasks are retained from the previous completed run as a stable
+validation cohort; four additional held-out tasks are mined fresh. The fresh
+cohort is split into 6 training tasks and 4 new held-out tasks. The default
+split seed is 42. AlanGym verifies retained PRs by commit identity and blocks
+instead of relabeling tasks when it cannot recover the exact cohort.
 
 The tests can reveal the shape of a fix. That is part of this benchmark design:
 the source change is removed while the PR's regression tests remain.
@@ -54,7 +57,7 @@ the source change is removed while the PR's regression tests remain.
 - Windows 10 or 11 with Python 3.13 and `uv`
 - Node.js 22
 - GitHub CLI (`gh`) authenticated to GitHub
-- Alan Code 0.1.6 and an Alan account that can use DeepSeek V4.1 Flash
+- Alan Code 0.1.6 and an Alan account that can use DeepSeek V4.1 Flash and V4 Pro
 
 Install the pinned Alan CLI and complete its one-time device login:
 
@@ -64,9 +67,12 @@ alan --login
 alan --list-models
 ```
 
-AlanGym pins the model to `deepseek/deepseek-v4.1-flash`. It makes no separate
-model API calls and does not buy or add credits. The current CLI does not expose
-per-session dollar costs, so costs remain `null` in saved results.
+The experiment pins its repair model to `deepseek/deepseek-v4.1-flash`. The
+optional ladder compares Flash without a skill, Flash with the current skill,
+and V4 Pro without a skill on every held-out task. It uses the configured Alan
+models and existing credits; AlanGym never buys or adds credits. Token counts
+appear when Alan's local session database provides them. Dollar costs remain
+hidden unless billing is verified.
 
 ## Run locally
 
@@ -107,21 +113,36 @@ which Git ignores.
 
 ## Experiment rules
 
-- Every task, evolver proposal, and trial starts a fresh Alan Code print-mode
-  session using the pinned model.
-- A repair session has a 3-minute limit. Its frozen pytest command has a
-  60-second grading limit.
+- Every repair, ladder trial, and skill proposal starts a fresh Alan Code
+  print-mode session. Repair sessions use Flash; the optional ladder uses its
+  three pinned configurations.
+- Repair and ladder sessions have a 10-minute limit. Frozen pytest commands
+  have a 60-second grading limit.
 - Alan can change only the PR's source files. AlanGym restores other workspace
   changes before grading and records a policy violation as a failed trial.
 - The evolver receives only training-task failures. A candidate is kept only
-  when it raises the current training pass count. Each kept skill version is
-  committed and pushed.
+  when it improves training without regressing any prior pass. A regression
+  triggers one retry; the candidate is still rejected and inconsistent retries
+  are marked flaky.
 - Held-out tasks are scored at baseline and after the last round. They are not
-  sent to the evolver.
+  sent to the evolver. The model ladder runs only when started from the local
+  evidence panel.
 - A completed run writes a scrubbed, read-only replay to
   `web/public/data/demo-run.json`, commits it, and pushes it. The replay keeps
-  grader output and source diffs; it omits raw Alan transcripts and local file
-  paths.
+  grader output, source diffs, token counts, and safe action labels. It omits
+  raw Alan transcripts, prompts, tool arguments, and local file paths. Raw
+  session histories stay in the local database.
+
+## Evidence views and limits
+
+The dashboard includes a task scrubber, pass/fail heatmap, skill lineage,
+version-level PR provenance, model ladder, task-level X-ray fallback, and a
+controlled Flash battle replay when both skill configurations have saved data.
+The fallback compares complete task outcomes and does not claim that one skill
+line caused a specific agent decision. Battle replay shows action labels only.
+Line-level counterfactual probes, skill compilation, adversarial twins, and
+exact conversation/workspace time-travel forks remain unavailable until their
+required evidence and restoration data exist.
 
 Boltons' `conftest.py` uses a pytest hook signature removed in pytest 9. For
 that demo repository, AlanGym applies a local pytest 8 compatibility pin to
