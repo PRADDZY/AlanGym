@@ -51,6 +51,7 @@ a { color: inherit; }
 .kicker-mark { display: grid; place-items: center; height: 21px; min-width: 25px; padding: 0 5px; border: 1px solid #627068; border-radius: 2px; color: var(--lime); font-size: 9px; }
 h1 { margin: 29px 0 15px; font-family: var(--serif); font-weight: 400; font-size: clamp(42px, 4.1vw, 66px); line-height: .98; letter-spacing: -1.1px; }
 .hero-copy > p { max-width: 385px; margin: 0; color: #b8c0b6; font-size: 13px; line-height: 1.75; }
+.hero-copy > p.result-context { margin-top: 14px; color: #d3d9d1; }
 .hero-foot { display: flex; align-items: center; gap: 9px; margin-top: auto; padding-top: 23px; color: #c8d0c6; font-family: var(--mono); font-size: 9px; }
 .hero-rule { width: 20px; height: 1px; margin-right: 2px; background: var(--lime); }
 .hero-foot i { color: var(--lime); font-style: normal; }

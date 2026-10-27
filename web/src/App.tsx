@@ -165,6 +165,12 @@ function App() {
   const trainingMetrics = scoreEvents.filter((event) => event.payload?.split === "training")
     .sort((left, right) => Number(left.payload?.round ?? 0) - Number(right.payload?.round ?? 0));
   const heldoutMetrics = scoreEvents.filter((event) => event.payload?.split === "heldout");
+  const baselineHeldout = heldoutMetrics.find((event) => event.payload?.label === "baseline");
+  const finalHeldout = heldoutMetrics.find((event) => event.payload?.label === "final");
+  const sameHeldoutSkill = typeof baselineHeldout?.payload?.skill_version === "string"
+    && baselineHeldout.payload.skill_version === finalHeldout?.payload?.skill_version;
+  const lineage = detail?.analysis_report?.lineage ?? [];
+  const noAcceptedCandidates = lineage.length > 0 && lineage.every((entry) => !entry.accepted);
 
   return (
     <main className="app-shell">
@@ -190,6 +196,7 @@ function App() {
               <div className="hero-kicker"><span className="kicker-mark">01</span><span>THE EXPERIMENT</span></div>
               <h1>Skills should earn<br />their next line.</h1>
               <p>AlanGym turns merged pull requests into real repair tasks. Alan solves them, repository tests grade the work, and only training failures can shape the skill.</p>
+              {sameHeldoutSkill && noAcceptedCandidates && <p className="result-context">No candidate skill was accepted. Both held-out evaluations used the same retained skill; the score change does not establish its cause.</p>}
               <div className="hero-foot"><span className="hero-rule" /><span>{detail.run.model}</span><i>·</i><span>two bounded rounds</span></div>
             </div>
             <div className="hero-chart">
@@ -301,12 +308,12 @@ function EmptyState({
               <button type="submit" disabled={mode !== "live" || busy}>{busy ? "STARTING…" : "START RUN"}<ArrowIcon /></button>
             </div>
             <div className="form-foot">
-              <span>14 verified tasks · 6 train · 8 held out · 2 rounds</span>
+              <span>14 planned tasks · 6 train · 8 held out · 2 rounds</span>
               {mode === "live" && <span className="api-ready"><i />LOCAL API READY</span>}
             </div>
             {notice && <p className="form-notice" role="alert">{notice}</p>}
           </form>
-          {mode === "offline" && <div className="offline-note"><span className="connection-dot" />Start alangym serve to run locally. A public replay will appear here after a measured run is saved.</div>}
+          {mode === "offline" && <div className="offline-note"><span className="connection-dot" />Start alangym serve to run locally. A public replay appears after a completed run is reviewed and published.</div>}
         </div>
       </section>
       <section className="method-band">
@@ -547,11 +554,15 @@ function PassRateChart({ training, heldout }: { training: RunEvent[]; heldout: R
 
 function ScoreReadout({ label, metric, planned }: { label: string; metric?: RunEvent; planned: number }) {
   const passed = metric?.payload?.passed;
+  const round = metric?.payload?.round;
+  const caption = metric?.payload?.label === "baseline" ? "baseline"
+    : typeof round === "number" ? `round ${round}`
+    : metric?.payload?.label === "final" ? "final" : metric ? "observed" : "awaiting run";
   return (
     <div className="measure">
       <span className="measure-label">{label}</span>
       <strong>{typeof passed === "number" ? passed + "/" + planned : "—/" + planned}</strong>
-      <span className="measure-caption">{metric?.payload?.label === "baseline" ? "baseline" : metric ? "observed" : "awaiting run"}</span>
+      <span className="measure-caption">{caption}</span>
     </div>
   );
 }

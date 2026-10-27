@@ -52,6 +52,14 @@ instead of relabeling tasks when it cannot recover the exact cohort.
 The tests can reveal the shape of a fix. That is part of this benchmark design:
 the source change is removed while the PR's regression tests remain.
 
+The previous completed 10-task run had 6 training and 4 held-out tasks.
+Baseline training passed 4/6; the round-two current score was 5/6. Held-out
+results were 4/4 at baseline and 3/4 at the end. Both proposed skill candidates
+were rejected, so the initial skill remained in use. These results do not
+establish that a skill change caused the score differences. The 14-task
+benchmark and a real model ladder have not yet been run, and costs are
+unverified.
+
 ## Requirements
 
 - Windows 10 or 11 with Python 3.13 and `uv`
@@ -72,7 +80,8 @@ optional ladder compares Flash without a skill, Flash with the current skill,
 and V4 Pro without a skill on every held-out task. It uses the configured Alan
 models and existing credits; AlanGym never buys or adds credits. Token counts
 appear when Alan's local session database provides them. Dollar costs remain
-hidden unless billing is verified.
+hidden unless billing is verified. AlanGym does not enforce a dollar spending
+cap; the session time limit is not a spending limit.
 
 ## Run locally
 
@@ -127,8 +136,8 @@ which Git ignores.
 - Held-out tasks are scored at baseline and after the last round. They are not
   sent to the evolver. The model ladder runs only when started from the local
   evidence panel.
-- A completed run writes a scrubbed, read-only replay to
-  `web/public/data/demo-run.json`, commits it, and pushes it. The replay keeps
+- A completed run saves a scrubbed replay under `.alangym/exports/` for review.
+  Export it again after saved ladder trials to include those trials. The replay keeps
   grader output, source diffs, token counts, and safe action labels. It omits
   raw Alan transcripts, prompts, tool arguments, and local file paths. Raw
   session histories stay in the local database.
@@ -170,6 +179,18 @@ The public replay is deployed to Cloudflare Pages at
 https://alangym-13q.pages.dev. It displays the saved replay and evidence report;
 starting or canceling live model runs requires the local AlanGym API.
 
+To review a completed run and include any saved ladder trials, export it from
+the local database and inspect the JSON before publishing. The default output is
+`.alangym/exports/RUN_ID.json`; use `--output PATH` to choose another file.
+Export does not run models, commit, push, or deploy.
+
+```powershell
+uv run alangym export RUN_ID
+Get-Content .alangym/exports/RUN_ID.json
+# After review, copy the approved replay into the site:
+Copy-Item .alangym/exports/RUN_ID.json web/public/data/demo-run.json
+```
+
 To build and publish the production site:
 
 ```powershell
@@ -187,8 +208,8 @@ cd web
 npm run build
 ```
 
-No benchmark scores are presented until Alan has actually run the tasks and
-the repository tests have graded the results.
+Benchmark scores represent tasks Alan actually ran and the repository tests
+graded; demo data does not establish results for an unrun benchmark.
 
 ## License
 
