@@ -166,10 +166,17 @@ skill version or configured an automation; those actions happen in Alan.
 
 ## Replay site
 
-The `Publish AlanGym replay` GitHub Actions workflow builds the dashboard and
-publishes it to GitHub Pages when `main` changes. Pages is read-only: it shows
-the saved JSON replay and cannot start a model run. The live dashboard and its
-start/cancel controls are local.
+The public replay is deployed to Cloudflare Pages at
+https://alangym-13q.pages.dev. It displays the saved replay and evidence report;
+starting or canceling live model runs requires the local AlanGym API.
+
+To build and publish the production site:
+
+```powershell
+cd web
+npm run build:cloudflare
+npx wrangler pages deploy dist --project-name=alangym --branch=main
+```
 
 ## Development checks
 
