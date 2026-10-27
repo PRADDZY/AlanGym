@@ -369,7 +369,7 @@ class ExperimentManager:
                 "Experiment finished with baseline and final held-out results saved",
                 payload={"skill_version": current_version},
             )
-            self._publish_replay(run_id)
+            self._save_replay_for_review(run_id)
         except asyncio.CancelledError:
             self._mark_terminal(run_id, "cancelled", "Run cancelled by the user")
         except ExperimentBlocked as error:
@@ -767,19 +767,29 @@ class ExperimentManager:
         source_pr_numbers: list[int],
         current_passes: int,
     ) -> None:
+        status = subprocess.run(
+            ["git", "-C", str(self.project_root), "status", "--porcelain", "--", SKILL_RELATIVE_PATH],
+            check=True, capture_output=True, text=True,
+        )
+        if (
+            status.stdout.strip()
+            or not skill_path.is_file()
+            or skill_path.read_text(encoding="utf-8") != parent_content
+        ):
+            raise ExperimentBlocked("The repair skill has local changes; review them before accepting a candidate.")
         skill_path.write_text(content, encoding="utf-8")
-        subprocess.run(
-            ["git", "-C", str(self.project_root), "add", "--", SKILL_RELATIVE_PATH],
-            check=True, capture_output=True, text=True,
-        )
-        subprocess.run(
-            ["git", "-C", str(self.project_root), "commit", "-m", "Tune repair skill"],
-            check=True, capture_output=True, text=True,
-        )
-        subprocess.run(
-            ["git", "-C", str(self.project_root), "push"],
-            check=True, capture_output=True, text=True,
-        )
+        try:
+            subprocess.run(
+                [
+                    "git", "-C", str(self.project_root), "commit", "--only", "-m",
+                    "Tune repair skill", "--", SKILL_RELATIVE_PATH,
+                ],
+                check=True, capture_output=True, text=True,
+            )
+        except Exception:
+            if skill_path.is_file() and skill_path.read_text(encoding="utf-8") == content:
+                skill_path.write_text(parent_content, encoding="utf-8")
+            raise
         self.database.save_skill_version(
             run_id, version, content,
             parent_version=parent_version, training_passes=training_passes,
@@ -926,36 +936,18 @@ class ExperimentManager:
         except (KeyError, ValueError):
             return
 
-    def _publish_replay(self, run_id: str) -> None:
-        replay_path = self.project_root / "web" / "public" / "data" / "demo-run.json"
+    def _save_replay_for_review(self, run_id: str) -> None:
+        replay_path = self.data_root / "exports" / f"{run_id}.json"
         try:
             export_replay(self.database, run_id, replay_path)
-            changed = subprocess.run(
-                ["git", "-C", str(self.project_root), "status", "--short", "--", "web/public/data/demo-run.json"],
-                check=True, capture_output=True, text=True,
-            ).stdout.strip()
-            if not changed:
-                return
-            subprocess.run(
-                ["git", "-C", str(self.project_root), "add", "--", "web/public/data/demo-run.json"],
-                check=True, capture_output=True, text=True,
-            )
-            subprocess.run(
-                ["git", "-C", str(self.project_root), "commit", "-m", "Save run replay"],
-                check=True, capture_output=True, text=True,
-            )
-            subprocess.run(
-                ["git", "-C", str(self.project_root), "push"],
-                check=True, capture_output=True, text=True,
-            )
             self._progress(
-                run_id, "replay_published", "Saved the privacy-filtered public run replay", {},
+                run_id, "replay_saved", "Saved a privacy-filtered replay locally for review", {},
             )
         except Exception as error:
             self._progress(
                 run_id,
-                "replay_publish_failed",
-                "The run finished locally, but its static replay could not be published",
+                "replay_save_failed",
+                "The run finished locally, but its replay could not be saved for review",
                 {"error": f"{type(error).__name__}: {error}"},
             )
 
